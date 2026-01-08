@@ -19,6 +19,9 @@ export async function getStaticPaths() {
 const { guide } = Astro.props;
 const { Content, headings } = await render(guide);
 
+const issueTitle = `Issue with guide: ${guide.id}`;
+const issueUrl = `https://github.com/wintion/China-Starter-Guide/issues/new?title=${encodeURIComponent(issueTitle)}`;
+
 const relatedGuides = (await getCollection('guides'))
 	.filter((entry) => entry.data.category === guide.data.category && entry.id !== guide.id)
 	.sort((a, b) => b.data.lastUpdated.valueOf() - a.data.lastUpdated.valueOf())
@@ -81,6 +84,17 @@ const relatedGuides = (await getCollection('guides'))
 			.related a:hover {
 				color: var(--accent);
 			}
+			.report-issue {
+				margin-top: 0.75rem;
+				font-size: 0.95rem;
+			}
+			.report-issue a {
+				color: rgb(var(--gray-dark));
+				text-decoration: none;
+			}
+			.report-issue a:hover {
+				color: var(--accent);
+			}
 			@media (min-width: 900px) {
 				.guide-body {
 					grid-template-columns: 240px minmax(0, 1fr);
@@ -97,6 +111,9 @@ const relatedGuides = (await getCollection('guides'))
 					<p>{guide.data.description}</p>
 					<p class="guide-meta">
 						Last updated <FormattedDate date={guide.data.lastUpdated} />
+					</p>
+					<p class="report-issue">
+						<a href={issueUrl} target="_blank" rel="noreferrer">Report an issue</a>
 					</p>
 				</header>
 				<section class="guide-body">

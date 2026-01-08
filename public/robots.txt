@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://chinastarterguide.com/sitemap.xml
+Sitemap: https://chinastarterguide.com/sitemap-index.xml

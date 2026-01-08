@@ -1,47 +1,159 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
+import FormattedDate from '../components/FormattedDate.astro';
 import Layout from '../components/Layout.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+const guides = (await getCollection('guides')).sort(
+	(a, b) => b.data.lastUpdated.valueOf() - a.data.lastUpdated.valueOf(),
+);
+
+const recentGuides = guides.slice(0, 6);
+
+const topConcerns = [
+	{
+		href: '/guides/payment/how-to-pay-in-china',
+		title: 'How to Pay in China',
+		description: 'Cash, cards, and mobile wallets you can use on day one.',
+	},
+	{
+		href: '/guides/transport/high-speed-rail-basics',
+		title: 'High-Speed Rail Basics',
+		description: 'Booking, boarding, and picking the right seat class.',
+	},
+	{
+		href: '/guides/prepare/visa-free-explained',
+		title: 'Visa-Free Entry Explained',
+		description: 'Understand eligibility, limits, and required documents.',
+	},
+];
+
+const primaryCtas = [
+	{
+		href: '/category/prepare',
+		title: 'Prepare before arrival',
+		description: 'Visas, documents, and essential setup.',
+	},
+	{
+		href: '/category/payment',
+		title: 'Pay smoothly',
+		description: 'Wallets, cards, and cash expectations.',
+	},
+	{
+		href: '/category/transport',
+		title: 'Get around fast',
+		description: 'Trains, metros, and local travel basics.',
+	},
+];
+
+const formatCategory = (value: string) => `${value.charAt(0).toUpperCase()}${value.slice(1)}`;
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<BaseHead
+			title="China Starter Guide"
+			description="Practical, content-first guidance for first-time foreigners visiting China."
+		/>
+		<style>
+			.hero {
+				padding: 2rem 0 1rem;
+			}
+			.hero p {
+				max-width: 680px;
+			}
+			.section {
+				margin-top: 3rem;
+			}
+			.card-grid {
+				display: grid;
+				gap: 1rem;
+				grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+			}
+			.card {
+				display: block;
+				border: 1px solid rgb(var(--gray-light));
+				border-radius: 10px;
+				padding: 1rem;
+				background: #fff;
+				text-decoration: none;
+				color: rgb(var(--black));
+			}
+			.card:hover {
+				border-color: var(--accent);
+			}
+			.card p {
+				margin: 0.4rem 0 0;
+				color: rgb(var(--gray-dark));
+			}
+			.list {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+				display: grid;
+				gap: 1rem;
+			}
+			.list a {
+				text-decoration: none;
+				color: rgb(var(--black));
+			}
+			.list a:hover {
+				color: var(--accent);
+			}
+			.meta {
+				color: rgb(var(--gray));
+				font-size: 0.95rem;
+				margin-top: 0.25rem;
+			}
+		</style>
 	</head>
 	<body>
 		<Layout>
 			<main>
-				<h1>🧑‍🚀 Hello, Astronaut!</h1>
-				<p>
-					Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-					serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-					website, blog, or portfolio with Astro.
-				</p>
-				<p>
-					This template comes with a few integrations already configured in your
-					<code>astro.config.mjs</code> file. You can customize your setup with
-					<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-					React, or Vue to your project.
-				</p>
-				<p>Here are a few ideas on how to get started with the template:</p>
-				<ul>
-					<li>Edit this page in <code>src/pages/index.astro</code></li>
-					<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-					<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-					<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-					<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-				</ul>
-				<p>
-					Have fun! If you get stuck, remember to
-					<a href="https://docs.astro.build/">read the docs</a>
-					or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-				</p>
-				<p>
-					Looking for a blog template with a bit more personality? Check out
-					<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-					by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-				</p>
+				<section class="hero">
+					<h1>China Starter Guide</h1>
+					<p>
+						Clear, current guidance for first-time foreigners visiting China. Start with the essentials, then
+						follow the guides that match your trip.
+					</p>
+					<div class="card-grid">
+						{primaryCtas.map((cta) => (
+							<a class="card" href={cta.href}>
+								<strong>{cta.title}</strong>
+								<p>{cta.description}</p>
+							</a>
+						))}
+					</div>
+				</section>
+
+				<section class="section">
+					<h2>Top concerns</h2>
+					<ul class="list">
+						{topConcerns.map((guide) => (
+							<li>
+								<a href={guide.href}>{guide.title}</a>
+								<p>{guide.description}</p>
+							</li>
+						))}
+					</ul>
+				</section>
+
+				<section class="section">
+					<h2>Recently updated</h2>
+					<ul class="list">
+						{recentGuides.map((guide) => (
+							<li>
+								<a href={`/guides/${guide.id}`}>{guide.data.title}</a>
+								<p>{guide.data.description}</p>
+								<p class="meta">
+									{formatCategory(guide.data.category)} · Last updated
+									<FormattedDate date={guide.data.lastUpdated} />
+								</p>
+							</li>
+						))}
+					</ul>
+				</section>
 			</main>
 		</Layout>
 	</body>

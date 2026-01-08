@@ -1,0 +1,125 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Layout from '../components/Layout.astro';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead
+			title="Search | China Starter Guide"
+			description="Search guides and answers for first-time visitors to China."
+		/>
+		<style>
+			.search-shell {
+				max-width: 720px;
+			}
+			.search-input {
+				width: 100%;
+				max-width: 480px;
+				padding: 0.6rem 0.8rem;
+				border: 1px solid rgb(var(--gray-light));
+				border-radius: 8px;
+				font-size: 1rem;
+			}
+			.search-input:focus {
+				outline: 2px solid rgba(35, 55, 255, 0.2);
+				outline-offset: 2px;
+			}
+			.search-status {
+				color: rgb(var(--gray));
+				margin-top: 0.75rem;
+			}
+			.search-results {
+				list-style: none;
+				padding: 0;
+				margin: 1.5rem 0 0;
+				display: grid;
+				gap: 1.5rem;
+			}
+			.search-results a {
+				text-decoration: none;
+				color: rgb(var(--black));
+				font-weight: 600;
+			}
+			.search-results a:hover {
+				color: var(--accent);
+			}
+			.search-snippet {
+				margin: 0.4rem 0 0;
+				color: rgb(var(--gray-dark));
+			}
+		</style>
+	</head>
+	<body>
+		<Layout>
+			<main>
+				<section class="search-shell">
+					<h1>Search</h1>
+					<p>Find guides and answers across the China Starter Guide.</p>
+					<label class="sr-only" for="search-input">Search guides</label>
+					<input
+						id="search-input"
+						class="search-input"
+						type="search"
+						placeholder="Search guides"
+						autocomplete="off"
+					/>
+					<p id="search-status" class="search-status">Start typing to see results.</p>
+					<ul id="search-results" class="search-results"></ul>
+				</section>
+			</main>
+		</Layout>
+		<script is:inline src="/pagefind/pagefind.js"></script>
+		<script>
+			const input = document.querySelector('#search-input');
+			const results = document.querySelector('#search-results');
+			const status = document.querySelector('#search-status');
+
+			const renderStatus = (message) => {
+				status.textContent = message;
+			};
+
+			const renderResults = (items) => {
+				if (!items.length) {
+					results.innerHTML = '';
+					renderStatus('No results found. Try another search.');
+					return;
+				}
+
+				results.innerHTML = items
+					.map((item) => {
+						const title = item.meta?.title || item.meta?.heading || item.url;
+						const snippet = item.excerpt || '';
+						return `
+							<li>
+								<a href="${item.url}">${title}</a>
+								<p class="search-snippet">${snippet}</p>
+							</li>
+						`;
+					})
+					.join('');
+				renderStatus(`${items.length} result${items.length === 1 ? '' : 's'}`);
+			};
+
+			input.addEventListener('input', async (event) => {
+				const query = event.target.value.trim();
+
+				if (!query) {
+					results.innerHTML = '';
+					renderStatus('Start typing to see results.');
+					return;
+				}
+
+				try {
+					const search = await window.pagefind.search(query);
+					const data = await Promise.all(search.results.map((result) => result.data()));
+					renderResults(data);
+				} catch (error) {
+					results.innerHTML = '';
+					renderStatus('Search is still loading. Try again in a moment.');
+				}
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,85 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Layout from '../../components/Layout.astro';
+
+export const categories = ['prepare', 'payment', 'transport', 'life', 'cities', 'tips'] as const;
+
+export async function getStaticPaths() {
+	return categories.map((category) => ({
+		params: { category },
+	}));
+}
+
+const { category } = Astro.params;
+
+if (!category || !categories.includes(category)) {
+	return new Response(null, { status: 404 });
+}
+
+const guides = (await getCollection('guides'))
+	.filter((entry) => entry.data.category === category)
+	.sort((a, b) => b.data.lastUpdated.valueOf() - a.data.lastUpdated.valueOf());
+
+const label = `${category.charAt(0).toUpperCase()}${category.slice(1)}`;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead
+			title={`${label} guides | China Starter Guide`}
+			description={`Practical ${label.toLowerCase()} guides for first-time visitors to China.`}
+		/>
+		<style>
+			.category-header {
+				margin-bottom: 2rem;
+			}
+			.category-list {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+				display: grid;
+				gap: 1.5rem;
+			}
+			.category-list a {
+				text-decoration: none;
+				color: rgb(var(--black));
+			}
+			.category-list a:hover {
+				color: var(--accent);
+			}
+			.category-meta {
+				color: rgb(var(--gray));
+				font-size: 0.95rem;
+				margin-top: 0.35rem;
+			}
+		</style>
+	</head>
+	<body>
+		<Layout>
+			<main>
+				<header class="category-header">
+					<h1>{label} guides</h1>
+					<p>Focused, practical guidance for first-time visitors.</p>
+				</header>
+				{guides.length > 0 ? (
+					<ul class="category-list">
+						{guides.map((guide) => (
+							<li>
+								<a href={`/guides/${guide.id}`}>{guide.data.title}</a>
+								<p>{guide.data.description}</p>
+								<p class="category-meta">
+									Last updated <FormattedDate date={guide.data.lastUpdated} />
+								</p>
+							</li>
+						))}
+					</ul>
+				) : (
+					<p>No guides are available in this category yet.</p>
+				)}
+			</main>
+		</Layout>
+	</body>
+</html>

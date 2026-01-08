@@ -1,0 +1,134 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Layout from '../../components/Layout.astro';
+
+type Props = {
+	guide: CollectionEntry<'guides'>;
+};
+
+export async function getStaticPaths() {
+	const guides = await getCollection('guides');
+	return guides.map((guide) => ({
+		params: { slug: guide.id },
+		props: { guide },
+	}));
+}
+
+const { guide } = Astro.props;
+const { Content, headings } = await render(guide);
+
+const relatedGuides = (await getCollection('guides'))
+	.filter((entry) => entry.data.category === guide.data.category && entry.id !== guide.id)
+	.sort((a, b) => b.data.lastUpdated.valueOf() - a.data.lastUpdated.valueOf())
+	.slice(0, 5);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={guide.data.title} description={guide.data.description} />
+		<style>
+			.guide-header {
+				margin-bottom: 2rem;
+			}
+			.guide-header p {
+				margin: 0.25rem 0;
+			}
+			.guide-meta {
+				color: rgb(var(--gray));
+				font-size: 0.95rem;
+			}
+			.guide-body {
+				display: grid;
+				grid-template-columns: minmax(0, 1fr);
+				gap: 2rem;
+			}
+			.toc {
+				border: 1px solid rgb(var(--gray-light));
+				border-radius: 8px;
+				padding: 1rem;
+				background: #fff;
+			}
+			.toc h2 {
+				font-size: 1.25rem;
+				margin-bottom: 0.5rem;
+			}
+			.toc ol {
+				margin: 0;
+				padding-left: 1.25rem;
+			}
+			.toc li {
+				margin: 0.25rem 0;
+			}
+			.related {
+				margin-top: 3rem;
+				border-top: 1px solid rgb(var(--gray-light));
+				padding-top: 2rem;
+			}
+			.related ul {
+				list-style: none;
+				padding: 0;
+				margin: 1rem 0 0;
+				display: grid;
+				gap: 0.75rem;
+			}
+			.related a {
+				color: rgb(var(--black));
+				text-decoration: none;
+			}
+			.related a:hover {
+				color: var(--accent);
+			}
+			@media (min-width: 900px) {
+				.guide-body {
+					grid-template-columns: 240px minmax(0, 1fr);
+					align-items: start;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<Layout>
+			<main>
+				<header class="guide-header">
+					<h1>{guide.data.title}</h1>
+					<p>{guide.data.description}</p>
+					<p class="guide-meta">
+						Last updated <FormattedDate date={guide.data.lastUpdated} />
+					</p>
+				</header>
+				<section class="guide-body">
+					{headings.length > 0 && (
+						<aside class="toc">
+							<h2>On this page</h2>
+							<ol>
+								{headings.map((heading) => (
+									<li>
+										<a href={`#${heading.slug}`}>{heading.text}</a>
+									</li>
+								))}
+							</ol>
+						</aside>
+					)}
+					<article class="guide-content">
+						<Content />
+					</article>
+				</section>
+				{relatedGuides.length > 0 && (
+					<section class="related">
+						<h2>Related guides</h2>
+						<ul>
+							{relatedGuides.map((entry) => (
+								<li>
+									<a href={`/guides/${entry.id}`}>{entry.data.title}</a>
+								</li>
+							))}
+						</ul>
+					</section>
+				)}
+			</main>
+		</Layout>
+	</body>
+</html>

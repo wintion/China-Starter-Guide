@@ -1,12 +1,12 @@
 ---
 title: "Alipay for Foreigners"
-description: "How to set up Alipay, verify your identity, and make everyday payments."
+description: "Operational setup and payment flow for Alipay with foreign cards, including failures and fixes."
 category: "payment"
 questions:
   - "q02"
   - "q14"
   - "q27"
-lastUpdated: "2026-01-08"
+lastUpdated: "2026-01-09"
 tags:
   - "alipay"
   - "wallets"
@@ -15,33 +15,66 @@ difficulty: "easy"
 ---
 
 ## Quick Answer
-Alipay can work with foreign cards, but you must complete verification and add a card before you can pay reliably.
+Install Alipay, complete passport verification, and bind a foreign card before you try to pay. At checkout you either **Scan** the merchant code or show your **Pay** code from **Pay/Collect**; if one fails, switch flows or switch wallets immediately. Do a small test payment first so you do not discover errors in a live queue.
 
-## Why this matters
-Alipay is widely accepted for daily spending. A clean setup saves time when you are in line or under pressure to pay quickly.
+## Exact Actions
+1. Install Alipay and set the app language.
+   - Open **App Store** or **Google Play**, install **Alipay**, then open the app.
+   - Tap **Me** (bottom right) > **Settings** > **General** > **Language** > **English**.
+   - If **Language** is missing, the app build is outdated or the menu did not load; update Alipay in the store, relaunch, and check **Me** > **Settings** > **General** again.
+2. Complete identity verification (mandatory for reliable payment).
+   - Tap **Me** > **Settings** > **Account and Security** > **Identity Verification** > **Passport**.
+   - Follow the prompts to upload your passport photo page and enter your name exactly as shown.
+   - If **Identity Verification** does not appear, your account is not fully initialized or the build is outdated; update the app, relaunch, and retry on stable data.
+3. Bind a foreign card.
+   - Tap **Me** > **Wallet** > **Cards** > **Add card**, then enter card number, expiry, and CVV.
+   - Use the same name order as your passport and confirm any verification prompts.
+   - If **Add card** fails, your issuer is blocking wallet binding or your name does not match; call your bank to allow international wallet usage, then retry or switch to another card.
+4. Locate the two payment entry points.
+   - On the Alipay home screen, tap **Scan** to scan a merchant QR.
+   - Tap **Pay/Collect** > **Pay** to display your personal payment code for a cashier to scan.
+   - If **Pay/Collect** or **Pay** is missing, your wallet is not fully enabled; complete identity verification and ensure at least one card is bound, then restart the app.
+5. Make a test payment before relying on Alipay.
+   - In a convenience store, tap **Scan**, scan the merchant QR, confirm the merchant name, and tap **Pay**.
+   - If the merchant name looks wrong, the code is for another shop or a personal transfer; cancel, ask for the official QR, and rescan.
+6. Enable Transport QR for metro and buses.
+   - Tap **Transport** on the home screen, select your city, and accept the activation prompts.
+   - You will see a black-and-white transit QR code specific to that city.
+   - If **Transport** is missing or activation fails, your verification may be incomplete or the city is not supported; finish identity verification and, if the city still does not appear, use ticket machines or local transit apps as a backup.
 
-## Step-by-step
-1. Open Alipay and create an account with your phone number.
-2. Look for identity verification in Profile or Settings and complete the passport steps. If the screens differ, verify locally.
-3. Go to Wallet or Cards and tap Add card. Enter your card details and follow any verification prompts.
-4. Test the wallet with a small purchase so you know it is working before you need it.
-5. At checkout, open Alipay and tap Scan to scan the merchant QR code, or tap Pay to show your code.
+## Failure Scenarios & Fixes
+- **Payment shows “Transaction not allowed”**: the merchant terminal does not accept foreign cards or your card is blocked for wallet use; switch to another wallet or pay cash, then call your bank to enable wallet transactions.
+- **Payment stuck on “Processing”**: network is unstable and the terminal timed out; check **Bills** for the final status before retrying to avoid double charge.
+- **Cashier scans your code and nothing happens**: screen brightness is too low or the scanner is dirty; increase brightness, hold the phone steady, and if it still fails, use **Scan** on the merchant code instead.
+- **Scan opens the camera but never detects the QR**: glare or damaged code; move closer, tilt the phone, or ask for a printed QR.
+- **Card added but payments still fail**: your card issuer allows binding but blocks merchant categories; test at a different merchant and keep a backup payment method ready.
 
-## Common problems & fixes
-- Verification pending: wait for the review to finish and avoid repeated submissions.
-- Card add fails: try another card, or contact your bank to allow the transaction.
-- Payment blocked: switch to cash or a backup wallet and try again later.
+## Reality Check
+- Some counters accept only WeChat Pay and will not try a second time with Alipay.
+- Payment can work in one city and fail in another without explanation.
+- Alipay menus can change after updates, and features can disappear until verification completes.
+- The cashier often expects you to show your **Pay** code, not scan theirs.
+
+## What Locals Do Instead
+- They switch to WeChat Pay immediately without debate.
+- They pay via a friend and transfer later.
+- They keep small cash notes for places that refuse QR or take too long to scan.
+- They move to a different counter when a terminal is failing.
 
 ## Checklist
-- [ ] Account created and verified.
-- [ ] Foreign card added and confirmed.
-- [ ] Scan and Pay screens located.
-- [ ] Backup payment ready.
+- [ ] Alipay installed and set to English.
+- [ ] Identity verification completed with passport.
+- [ ] At least one foreign card bound successfully.
+- [ ] **Scan** and **Pay/Collect** located and tested.
+- [ ] A successful test payment completed.
+- [ ] Transport QR activated for your city.
+- [ ] Backup cash ready.
 
 ## Next Steps
+- [How to pay in China](/guides/payment/how-to-pay-in-china)
 - [WeChat Pay for foreigners](/guides/payment/wechat-pay-for-foreigners)
-- [Alipay vs WeChat Pay](/guides/payment/alipay-vs-wechat-pay)
 - [Link a foreign card](/guides/payment/link-foreign-card)
-- [QR code payment basics](/guides/payment/qr-code-payment-basics)
 - [Payment failed: what to do](/guides/payment/payment-failed-what-to-do)
+- [QR code payment basics](/guides/payment/qr-code-payment-basics)
+- [Paying for metro and bus](/guides/payment/paying-for-metro-and-bus)
 - [Cash in China](/guides/payment/cash-in-china)

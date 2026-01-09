@@ -1,47 +1,165 @@
+// ===== link-foreign-card.mdx =====
 ---
-title: "Link a Foreign Card"
-description: "Step-by-step guidance for adding a foreign card to Chinese mobile wallets."
+title: "Linking a Foreign Card: What Works and What Fails"
+description: "How to link foreign cards to Chinese wallets, which cards succeed most often, and how to fix failures without wasting time at the counter."
 category: "payment"
 questions:
-  - "q05"
-  - "q17"
-  - "q30"
-lastUpdated: "2026-01-08"
+  - "q13"
+  - "q14"
+  - "q15"
+lastUpdated: "2026-01-09"
 tags:
   - "cards"
-  - "verification"
+  - "foreign-cards"
   - "wallets"
-difficulty: "medium"
+difficulty: "easy"
 ---
 
 ## Quick Answer
-You can often link a foreign card by adding it inside the wallet app, completing identity checks, and confirming a verification prompt.
 
-## Why this matters
-If a card is not linked correctly, payments can fail at the worst time. A clean setup gives you a reliable primary method.
+You can link foreign cards, but **linking success does not guarantee payment success**.  
+Failures usually come from **issuer restrictions or merchant routing**, not from the wallet app.  
+Test early, keep a backup card, and stop retrying after one failure.
 
-## Step-by-step
-1. Open your wallet app and find Wallet, Cards, or Payment Methods.
-2. Tap Add card and enter card details exactly as they appear on the card.
-3. Complete identity verification with your passport if prompted. Verify locally if screens change.
-4. Approve any bank verification request or small test charge.
-5. Save the card and confirm it appears in your wallet list.
+---
 
-## Common problems & fixes
-- Verification SMS never arrives: check roaming, or ask your bank for alternate verification.
-- Card rejected: try another card type or contact the bank to allow wallet transactions.
-- Card added but payments fail: remove and re-add the card, then test with a small purchase.
+## The Core Reality (Why Cards “Bind” but Don’t Pay)
+
+Wallets perform checks in layers:
+- Card entry and verification (bind step)
+- Issuer approval at transaction time
+- Merchant routing acceptance
+
+A card can pass the first layer and fail the second or third—**silently**.
+
+---
+
+## Cards That Tend to Work Better
+
+Higher success rate:
+- Major international credit cards
+- Cards enabled for international e-commerce
+- Cards with strong fraud controls that allow wallet usage
+
+Lower success rate:
+- Debit cards
+- Prepaid cards
+- Cards with strict geo-blocking
+- Cards requiring SMS approval for every charge
+
+Always carry **more than one card**.
+
+---
+
+## Exact Actions: Link Cards the Right Way
+
+### 1. Prepare before linking
+- Ensure your name matches the passport exactly
+- Enable international and wallet transactions with your bank
+- Disable overly strict spending blocks temporarily
+
+Preparation prevents most failures.
+
+---
+
+### 2. Link the card carefully
+- Add the card in the wallet’s **Cards** section
+- Use passport name order
+- Complete any verification prompts
+
+If linking fails twice, stop and try a different card.
+
+---
+
+### 3. Set expectations after linking
+- Linking ≠ ready
+- Do not rely on the card until you complete a **real test payment**
+- Keep cash or another wallet ready
+
+Testing is mandatory.
+
+---
+
+### 4. Perform a controlled test payment
+- Use a low-cost purchase
+- Prefer a formal merchant (convenience store)
+- Confirm success in **Bills**
+
+If it fails once, switch cards or wallets.
+
+---
+
+## Common Card Failure Reasons
+
+- Issuer blocks wallet payments
+- Merchant does not accept foreign cards
+- Card requires real-time SMS approval
+- Currency routing conflicts
+- Risk controls triggered by travel
+
+These are normal, not errors you caused.
+
+---
+
+## Failure Scenarios & Fixes
+
+- **“Transaction not allowed”**: switch card or wallet immediately.
+- **Payment hangs on “Processing”**: stop, check **Bills**, do not retry.
+- **Works at one store, fails at another**: merchant routing differs—switch method.
+- **Card linked but never works**: call issuer or stop using that card in wallets.
+- **Repeated prompts for verification**: pay cash and fix later.
+
+Speed beats persistence.
+
+---
+
+## What Not to Do
+
+- Do not retry the same card repeatedly
+- Do not argue with the cashier
+- Do not assume staff can “force” acceptance
+- Do not remove and re-add cards mid-line
+
+Retries increase the chance of duplicate charges.
+
+---
+
+## Reality Check
+
+- Even locals keep multiple cards.
+- Foreign cards are second-class citizens in routing.
+- Wallet acceptance varies by merchant.
+- Cash remains a valid fallback.
+
+Redundancy is the strategy.
+
+---
+
+## What Locals Do Instead
+
+- They test cards early.
+- They switch methods quickly.
+- They keep small cash.
+- They fix issues after the transaction, not during.
+
+Copy this behavior.
+
+---
 
 ## Checklist
-- [ ] Passport details ready for verification.
-- [ ] Bank notified of travel and wallet usage.
-- [ ] Card added and visible in wallet.
-- [ ] Backup card or cash ready.
+
+- [ ] At least two foreign cards prepared.
+- [ ] International and wallet use enabled with bank.
+- [ ] Card linked successfully.
+- [ ] One real test payment completed.
+- [ ] Backup wallet or cash ready.
+
+---
 
 ## Next Steps
-- [Alipay for foreigners](/guides/payment/alipay-for-foreigners)
-- [WeChat Pay for foreigners](/guides/payment/wechat-pay-for-foreigners)
-- [Payment failed: what to do](/guides/payment/payment-failed-what-to-do)
+
+- [Alipay vs WeChat Pay](/guides/payment/alipay-vs-wechat-pay)
 - [QR code payment basics](/guides/payment/qr-code-payment-basics)
-- [Withdrawing cash at ATMs](/guides/payment/withdrawing-cash-at-atm)
+- [Payment failed: what to do](/guides/payment/payment-failed-what-to-do)
 - [Cash in China](/guides/payment/cash-in-china)
+- [Withdrawing cash at ATMs](/guides/payment/withdrawing-cash-at-atm)

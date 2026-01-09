@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { type CollectionEntry, getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Layout from '../../components/Layout.astro';
@@ -22,7 +22,174 @@ const guides = (await getCollection('guides'))
 	.filter((entry) => entry.data.category === category)
 	.sort((a, b) => b.data.lastUpdated.valueOf() - a.data.lastUpdated.valueOf());
 
+type CategoryConfig = {
+	intro: string;
+	featuredIds?: string[];
+	topicGroups?: { title: string; ids: string[] }[];
+};
+
+const categoryConfig: Record<string, CategoryConfig> = {
+	prepare: {
+		intro: 'Visa, entry, safety, and pre-trip essentials to get you ready.',
+		featuredIds: [
+			'prepare/is-china-safe',
+			'prepare/visa-free-explained',
+			'prepare/visa-needed-checklist',
+			'prepare/entry-documents',
+			'prepare/return-ticket-proof',
+			'prepare/internet-restrictions-overview',
+		],
+	},
+	payment: {
+		intro: 'Mobile wallets, cards, cash, and QR payments that actually work.',
+		featuredIds: [
+			'payment/how-to-pay-in-china',
+			'payment/qr-code-payment-basics',
+			'payment/alipay-for-foreigners',
+			'payment/wechat-pay-for-foreigners',
+			'payment/link-foreign-card',
+			'payment/cash-in-china',
+		],
+	},
+	transport: {
+		intro: 'Trains, metros, flights, and airport transfers with clear steps.',
+		featuredIds: [
+			'transport/airport-to-city',
+			'transport/metro-basics',
+			'transport/using-didi',
+			'transport/high-speed-rail-basics',
+			'transport/buying-train-tickets',
+			'transport/travel-between-cities',
+		],
+	},
+	life: {
+		intro: 'Everyday living basics: SIMs, hotels, food, apps, and connectivity.',
+		featuredIds: [
+			'life/sim-card-vs-esim',
+			'life/buying-sim-at-airport',
+			'life/hotel-checkin-what-to-expect',
+			'life/hotel-foreigners-policy',
+			'life/translation-apps',
+			'life/wifi-public-internet',
+		],
+	},
+	cities: {
+		intro: 'Choose the right cities, routes, and seasons for a first trip.',
+		featuredIds: [
+			'cities/best-cities-first-time',
+			'cities/how-much-time-in-china',
+			'cities/how-many-cities-to-visit',
+			'cities/suggested-routes-7-days',
+			'cities/suggested-routes-14-days',
+			'cities/beijing-first-timers',
+		],
+	},
+	tips: {
+		intro: 'Short, practical tips that reduce friction: etiquette, safety, communication, and daily habits.',
+		featuredIds: [
+			'tips/common-mistakes-first-timers',
+			'tips/cultural-do-and-dont',
+			'tips/greetings-and-social-norms',
+			'tips/what-to-wear',
+			'tips/dealing-with-crowds',
+			'tips/traveling-at-night',
+		],
+		topicGroups: [
+			{
+				title: 'Etiquette and social norms',
+				ids: [
+					'tips/greetings-and-social-norms',
+					'tips/compliments-and-politeness',
+					'tips/gestures-to-avoid',
+					'tips/public-affection',
+					'tips/cultural-do-and-dont',
+				],
+			},
+			{
+				title: 'Communication and understanding',
+				ids: [
+					'tips/handling-misunderstandings',
+					'tips/staying-connected-without-english',
+					'tips/taking-photos-privacy',
+				],
+			},
+			{
+				title: 'Safety and awareness',
+				ids: ['tips/dealing-with-crowds', 'tips/traveling-at-night', 'tips/safety-with-electronics'],
+			},
+			{
+				title: 'Families and seniors',
+				ids: ['tips/family-travel-tips', 'tips/seniors-travel-tips'],
+			},
+			{
+				title: 'Shopping and bargaining',
+				ids: ['tips/bargaining-basics'],
+			},
+		],
+	},
+};
+
+const config = categoryConfig[category] ?? {
+	intro: 'Focused, practical guidance for first-time visitors.',
+};
+
+const guideById = new Map(guides.map((guide) => [guide.id, guide]));
+const pickGuides = (ids: string[]) =>
+	ids.map((id) => guideById.get(id)).filter((entry): entry is CollectionEntry<'guides'> => Boolean(entry));
+const featuredGuides = config.featuredIds ? pickGuides(config.featuredIds) : guides.slice(0, 6);
+
+const tagLabelOverrides: Record<string, string> = {
+	alipay: 'Alipay',
+	'wechat-pay': 'WeChat Pay',
+	wechat: 'WeChat',
+	'qr-code': 'QR code',
+	qr: 'QR',
+	esim: 'eSIM',
+	sim: 'SIM',
+	vpn: 'VPN',
+	wifi: 'Wi-Fi',
+	'12306': '12306',
+};
+
+const formatTagLabel = (value: string) =>
+	tagLabelOverrides[value] ??
+	value
+		.split('-')
+		.map((word) => (word ? `${word.charAt(0).toUpperCase()}${word.slice(1)}` : ''))
+		.join(' ');
+
+const tagTopics = (() => {
+	const tagMap = new Map<string, CollectionEntry<'guides'>[]>();
+	for (const guide of guides) {
+		for (const tag of guide.data.tags ?? []) {
+			const list = tagMap.get(tag) ?? [];
+			list.push(guide);
+			tagMap.set(tag, list);
+		}
+	}
+	const entries = Array.from(tagMap.entries()).sort(
+		(a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]),
+	);
+	if (entries.length === 0) return [];
+	const primary = entries.filter(([, list]) => list.length >= 2);
+	const chosen = (primary.length > 0 ? primary : entries).slice(0, 6);
+	return chosen.map(([tag, list]) => ({
+		title: formatTagLabel(tag),
+		entries: list.slice(0, 4),
+	}));
+})();
+
+const topics = config.topicGroups
+	? config.topicGroups
+			.map((topic) => ({ title: topic.title, entries: pickGuides(topic.ids) }))
+			.filter((topic) => topic.entries.length > 0)
+	: tagTopics;
+
 const label = `${category.charAt(0).toUpperCase()}${category.slice(1)}`;
+const lowerLabel = label.toLowerCase();
+const introCopy = config.intro;
+const featuredHeading = category === 'tips' ? 'Featured tips' : `Featured ${lowerLabel} guides`;
+const allHeading = category === 'tips' ? 'All tips' : `All ${lowerLabel} guides`;
 ---
 
 <!doctype html>
@@ -35,6 +202,56 @@ const label = `${category.charAt(0).toUpperCase()}${category.slice(1)}`;
 		<style>
 			.category-header {
 				margin-bottom: 2rem;
+			}
+			.category-count {
+				margin-top: 0.5rem;
+				color: rgb(var(--gray));
+				font-size: 0.95rem;
+			}
+			.category-section {
+				margin-bottom: 2.5rem;
+			}
+			.featured-grid {
+				display: grid;
+				gap: 1rem;
+				grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+			}
+			.featured-card {
+				display: block;
+				border: 1px solid rgb(var(--gray-light));
+				border-radius: 10px;
+				padding: 1rem;
+				background: #fff;
+				text-decoration: none;
+				color: rgb(var(--black));
+			}
+			.featured-card:hover {
+				border-color: var(--accent);
+			}
+			.featured-card p {
+				margin: 0.4rem 0 0;
+				color: rgb(var(--gray-dark));
+			}
+			.topic-grid {
+				display: grid;
+				gap: 1.25rem;
+				grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+			}
+			.topic-card {
+				border: 1px solid rgb(var(--gray-light));
+				border-radius: 10px;
+				padding: 1rem;
+				background: #fff;
+			}
+			.topic-card h3 {
+				margin-top: 0;
+			}
+			.topic-card ul {
+				list-style: none;
+				margin: 0.75rem 0 0;
+				padding: 0;
+				display: grid;
+				gap: 0.35rem;
 			}
 			.category-list {
 				list-style: none;
@@ -62,20 +279,59 @@ const label = `${category.charAt(0).toUpperCase()}${category.slice(1)}`;
 			<main>
 				<header class="category-header">
 					<h1>{label} guides</h1>
-					<p>Focused, practical guidance for first-time visitors.</p>
+					<p>{introCopy}</p>
+					{guides.length > 0 && <p class="category-count">{guides.length} guides available</p>}
 				</header>
+				{featuredGuides.length > 0 && (
+					<section class="category-section" aria-labelledby="featured-guides">
+						<h2 id="featured-guides">{featuredHeading}</h2>
+						<div class="featured-grid">
+							{featuredGuides.map((guide) => (
+								<a class="featured-card" href={`/guides/${guide.id}`}>
+									<strong>{guide.data.title}</strong>
+									<p>{guide.data.description}</p>
+								</a>
+							))}
+						</div>
+					</section>
+				)}
+				{topics.length > 0 && (
+					<section class="category-section" aria-labelledby="browse-by-topic">
+						<h2 id="browse-by-topic">Browse by topic</h2>
+						<div class="topic-grid">
+							{topics.map((topic) => {
+								if (topic.entries.length === 0) return null;
+								return (
+									<div class="topic-card">
+										<h3>{topic.title}</h3>
+										<ul>
+											{topic.entries.map((entry) => (
+												<li>
+													<a href={`/guides/${entry.id}`}>{entry.data.title}</a>
+												</li>
+											))}
+										</ul>
+									</div>
+								);
+							})}
+						</div>
+					</section>
+				)}
 				{guides.length > 0 ? (
-					<ul class="category-list">
-						{guides.map((guide) => (
-							<li>
-								<a href={`/guides/${guide.id}`}>{guide.data.title}</a>
-								<p>{guide.data.description}</p>
-								<p class="category-meta">
-									Last updated <FormattedDate date={guide.data.lastUpdated} />
-								</p>
-							</li>
-						))}
-					</ul>
+					<>
+						<h2 id="all-guides">{allHeading}</h2>
+						<ul class="category-list">
+							{guides.map((guide) => (
+								<li>
+									<a href={`/guides/${guide.id}`}>{guide.data.title}</a>
+									<p>{guide.data.description}</p>
+									<p class="category-meta">
+										Last updated <FormattedDate date={guide.data.lastUpdated} />
+									</p>
+								</li>
+							))}
+						</ul>
+					</>
 				) : (
 					<p>No guides are available in this category yet.</p>
 				)}

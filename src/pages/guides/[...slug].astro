@@ -3,6 +3,7 @@ import { type CollectionEntry, getCollection, render } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Layout from '../../components/Layout.astro';
+import SeoJsonLd from '../../components/SeoJsonLd.astro';
 
 type Props = {
 	guide: CollectionEntry<'guides'>;
@@ -21,6 +22,8 @@ const { Content, headings } = await render(guide);
 
 const issueTitle = `Issue with guide: ${guide.id}`;
 const issueUrl = `https://github.com/wintion/China-Starter-Guide/issues/new?title=${encodeURIComponent(issueTitle)}`;
+const baseUrl = 'https://ChinaStarterGuide.com';
+const guideUrl = new URL(`/guides/${guide.id}`, baseUrl).toString();
 
 const relatedGuides = (await getCollection('guides'))
 	.filter((entry) => entry.data.category === guide.data.category && entry.id !== guide.id)
@@ -32,6 +35,12 @@ const relatedGuides = (await getCollection('guides'))
 <html lang="en">
 	<head>
 		<BaseHead title={guide.data.title} description={guide.data.description} />
+		<SeoJsonLd
+			title={guide.data.title}
+			description={guide.data.description}
+			url={guideUrl}
+			dateModified={guide.data.lastUpdated.toISOString()}
+		/>
 		<style>
 			.guide-header {
 				margin-bottom: 2rem;

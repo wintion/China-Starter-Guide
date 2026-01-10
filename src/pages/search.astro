@@ -1,6 +1,8 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
 import Layout from '../components/Layout.astro';
+
+const isProd = import.meta.env.PROD;
 ---
 
 <!doctype html>
@@ -70,14 +72,27 @@ import Layout from '../components/Layout.astro';
 				</section>
 			</main>
 		</Layout>
-		<script is:inline src="/pagefind/pagefind.js"></script>
-		<script>
+		<script define:vars={{ isProd }}>
 			const input = document.querySelector('#search-input');
 			const results = document.querySelector('#search-results');
 			const status = document.querySelector('#search-status');
+			let pagefindPromise;
 
 			const renderStatus = (message) => {
 				status.textContent = message;
+			};
+
+			const loadPagefind = () => {
+				if (pagefindPromise) {
+					return pagefindPromise;
+				}
+				pagefindPromise = import('/pagefind/pagefind.js').then((module) => {
+					if (module && typeof module.search === 'function') {
+						return module;
+					}
+					throw new Error('Pagefind failed to load');
+				});
+				return pagefindPromise;
 			};
 
 			const renderResults = (items) => {
@@ -99,7 +114,25 @@ import Layout from '../components/Layout.astro';
 						`;
 					})
 					.join('');
-				renderStatus(`${items.length} result${items.length === 1 ? '' : 's'}`);
+					renderStatus(`${items.length} result${items.length === 1 ? '' : 's'}`);
+			};
+
+			const initializeSearch = async () => {
+				if (!isProd) {
+					input.disabled = true;
+					renderStatus('Search is available after `npm run build` and `npm run preview`.');
+					return;
+				}
+				input.disabled = true;
+				renderStatus('Loading search index...');
+				try {
+					await loadPagefind();
+					input.disabled = false;
+					renderStatus('Start typing to see results.');
+				} catch (error) {
+					input.disabled = true;
+					renderStatus('Search is temporarily unavailable.');
+				}
 			};
 
 			input.addEventListener('input', async (event) => {
@@ -112,7 +145,8 @@ import Layout from '../components/Layout.astro';
 				}
 
 				try {
-					const search = await window.pagefind.search(query);
+					const pagefind = await loadPagefind();
+					const search = await pagefind.search(query);
 					const data = await Promise.all(search.results.map((result) => result.data()));
 					renderResults(data);
 				} catch (error) {
@@ -120,6 +154,8 @@ import Layout from '../components/Layout.astro';
 					renderStatus('Search is still loading. Try again in a moment.');
 				}
 			});
+
+			initializeSearch();
 		</script>
 	</body>
 </html>

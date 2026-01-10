@@ -3,6 +3,7 @@ import { type CollectionEntry, getCollection, render } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Layout from '../../components/Layout.astro';
+import SeoJsonLd from '../../components/SeoJsonLd.astro';
 
 type Props = {
 	guide: CollectionEntry<'guides'>;
@@ -19,6 +20,11 @@ export async function getStaticPaths() {
 const { guide } = Astro.props;
 const { Content, headings } = await render(guide);
 
+const issueTitle = `Issue with guide: ${guide.id}`;
+const issueUrl = `https://github.com/wintion/China-Starter-Guide/issues/new?title=${encodeURIComponent(issueTitle)}`;
+const baseUrl = 'https://ChinaStarterGuide.com';
+const guideUrl = new URL(`/guides/${guide.id}`, baseUrl).toString();
+
 const relatedGuides = (await getCollection('guides'))
 	.filter((entry) => entry.data.category === guide.data.category && entry.id !== guide.id)
 	.sort((a, b) => b.data.lastUpdated.valueOf() - a.data.lastUpdated.valueOf())
@@ -29,6 +35,12 @@ const relatedGuides = (await getCollection('guides'))
 <html lang="en">
 	<head>
 		<BaseHead title={guide.data.title} description={guide.data.description} />
+		<SeoJsonLd
+			title={guide.data.title}
+			description={guide.data.description}
+			url={guideUrl}
+			dateModified={guide.data.lastUpdated.toISOString()}
+		/>
 		<style>
 			.guide-header {
 				margin-bottom: 2rem;
@@ -81,6 +93,17 @@ const relatedGuides = (await getCollection('guides'))
 			.related a:hover {
 				color: var(--accent);
 			}
+			.report-issue {
+				margin-top: 0.75rem;
+				font-size: 0.95rem;
+			}
+			.report-issue a {
+				color: rgb(var(--gray-dark));
+				text-decoration: none;
+			}
+			.report-issue a:hover {
+				color: var(--accent);
+			}
 			@media (min-width: 900px) {
 				.guide-body {
 					grid-template-columns: 240px minmax(0, 1fr);
@@ -97,6 +120,9 @@ const relatedGuides = (await getCollection('guides'))
 					<p>{guide.data.description}</p>
 					<p class="guide-meta">
 						Last updated <FormattedDate date={guide.data.lastUpdated} />
+					</p>
+					<p class="report-issue">
+						<a href={issueUrl} target="_blank" rel="noreferrer">Report an issue</a>
 					</p>
 				</header>
 				<section class="guide-body">

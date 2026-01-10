@@ -1,0 +1,25 @@
+---
+interface Props {
+	title: string;
+	description: string;
+	url: string;
+	dateModified: string;
+}
+
+const { title, description, url, dateModified } = Astro.props;
+
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'Article',
+	headline: title,
+	description,
+	url,
+	dateModified,
+	mainEntityOfPage: {
+		'@type': 'WebPage',
+		'@id': url,
+	},
+};
+---
+
+<script type="application/ld+json">{JSON.stringify(jsonLd)}</script>

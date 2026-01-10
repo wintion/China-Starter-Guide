@@ -1,0 +1,602 @@
+[
+  {
+    "id": "q01",
+    "question": "What should I know about visa requirements before arriving in China?",
+    "category": "prepare",
+    "priority": 5
+  },
+  {
+    "id": "q02",
+    "question": "How does mobile wallets work for visitors in China?",
+    "category": "payment",
+    "priority": 4
+  },
+  {
+    "id": "q03",
+    "question": "What should I know about high-speed rail booking when traveling in China?",
+    "category": "transport",
+    "priority": 3
+  },
+  {
+    "id": "q04",
+    "question": "What should I know about access to common websites for daily life in China?",
+    "category": "life",
+    "priority": 2
+  },
+  {
+    "id": "q05",
+    "question": "What should I prioritize for choosing a first city as a first-time visitor?",
+    "category": "cities",
+    "priority": 1
+  },
+  {
+    "id": "q06",
+    "question": "What are the best practices for packing light while traveling in China?",
+    "category": "tips",
+    "priority": 5
+  },
+  {
+    "id": "q07",
+    "question": "What should I know about passport validity before arriving in China?",
+    "category": "prepare",
+    "priority": 4
+  },
+  {
+    "id": "q08",
+    "question": "How does linking foreign cards work for visitors in China?",
+    "category": "payment",
+    "priority": 3
+  },
+  {
+    "id": "q09",
+    "question": "What should I know about ticket pickup when traveling in China?",
+    "category": "transport",
+    "priority": 2
+  },
+  {
+    "id": "q10",
+    "question": "What should I know about hotel check-in for daily life in China?",
+    "category": "life",
+    "priority": 1
+  },
+  {
+    "id": "q11",
+    "question": "What should I prioritize for Beijing highlights as a first-time visitor?",
+    "category": "cities",
+    "priority": 5
+  },
+  {
+    "id": "q12",
+    "question": "What are the best practices for avoiding common scams while traveling in China?",
+    "category": "tips",
+    "priority": 4
+  },
+  {
+    "id": "q13",
+    "question": "What should I know about travel insurance before arriving in China?",
+    "category": "prepare",
+    "priority": 3
+  },
+  {
+    "id": "q14",
+    "question": "How does cash usage work for visitors in China?",
+    "category": "payment",
+    "priority": 2
+  },
+  {
+    "id": "q15",
+    "question": "What should I know about station entry checks when traveling in China?",
+    "category": "transport",
+    "priority": 1
+  },
+  {
+    "id": "q16",
+    "question": "What should I know about address registration for daily life in China?",
+    "category": "life",
+    "priority": 5
+  },
+  {
+    "id": "q17",
+    "question": "What should I prioritize for Shanghai priorities as a first-time visitor?",
+    "category": "cities",
+    "priority": 4
+  },
+  {
+    "id": "q18",
+    "question": "What are the best practices for jet lag while traveling in China?",
+    "category": "tips",
+    "priority": 3
+  },
+  {
+    "id": "q19",
+    "question": "What should I know about health coverage before arriving in China?",
+    "category": "prepare",
+    "priority": 2
+  },
+  {
+    "id": "q20",
+    "question": "How does ATM withdrawals work for visitors in China?",
+    "category": "payment",
+    "priority": 1
+  },
+  {
+    "id": "q21",
+    "question": "What should I know about seat classes when traveling in China?",
+    "category": "transport",
+    "priority": 5
+  },
+  {
+    "id": "q22",
+    "question": "What should I know about public restrooms for daily life in China?",
+    "category": "life",
+    "priority": 4
+  },
+  {
+    "id": "q23",
+    "question": "What should I prioritize for Guangzhou basics as a first-time visitor?",
+    "category": "cities",
+    "priority": 3
+  },
+  {
+    "id": "q24",
+    "question": "What are the best practices for budget planning while traveling in China?",
+    "category": "tips",
+    "priority": 2
+  },
+  {
+    "id": "q25",
+    "question": "What should I know about apps to install before arriving in China?",
+    "category": "prepare",
+    "priority": 1
+  },
+  {
+    "id": "q26",
+    "question": "How does payment limits work for visitors in China?",
+    "category": "payment",
+    "priority": 5
+  },
+  {
+    "id": "q27",
+    "question": "What should I know about metro cards when traveling in China?",
+    "category": "transport",
+    "priority": 4
+  },
+  {
+    "id": "q28",
+    "question": "What should I know about tap water safety for daily life in China?",
+    "category": "life",
+    "priority": 3
+  },
+  {
+    "id": "q29",
+    "question": "What should I prioritize for Shenzhen planning as a first-time visitor?",
+    "category": "cities",
+    "priority": 2
+  },
+  {
+    "id": "q30",
+    "question": "What are the best practices for language tips while traveling in China?",
+    "category": "tips",
+    "priority": 1
+  },
+  {
+    "id": "q31",
+    "question": "What should I know about SIM card setup before arriving in China?",
+    "category": "prepare",
+    "priority": 5
+  },
+  {
+    "id": "q32",
+    "question": "How does QR code payments work for visitors in China?",
+    "category": "payment",
+    "priority": 4
+  },
+  {
+    "id": "q33",
+    "question": "What should I know about city buses when traveling in China?",
+    "category": "transport",
+    "priority": 3
+  },
+  {
+    "id": "q34",
+    "question": "What should I know about food safety for daily life in China?",
+    "category": "life",
+    "priority": 2
+  },
+  {
+    "id": "q35",
+    "question": "What should I prioritize for Chengdu basics as a first-time visitor?",
+    "category": "cities",
+    "priority": 1
+  },
+  {
+    "id": "q36",
+    "question": "What are the best practices for photo etiquette while traveling in China?",
+    "category": "tips",
+    "priority": 5
+  },
+  {
+    "id": "q37",
+    "question": "What should I know about power adapters before arriving in China?",
+    "category": "prepare",
+    "priority": 4
+  },
+  {
+    "id": "q38",
+    "question": "How does refunds and chargebacks work for visitors in China?",
+    "category": "payment",
+    "priority": 3
+  },
+  {
+    "id": "q39",
+    "question": "What should I know about taxi apps when traveling in China?",
+    "category": "transport",
+    "priority": 2
+  },
+  {
+    "id": "q40",
+    "question": "What should I know about local etiquette for daily life in China?",
+    "category": "life",
+    "priority": 1
+  },
+  {
+    "id": "q41",
+    "question": "What should I prioritize for Xi'an essentials as a first-time visitor?",
+    "category": "cities",
+    "priority": 5
+  },
+  {
+    "id": "q42",
+    "question": "What are the best practices for bargaining basics while traveling in China?",
+    "category": "tips",
+    "priority": 4
+  },
+  {
+    "id": "q43",
+    "question": "What should I know about currency exchange before arriving in China?",
+    "category": "prepare",
+    "priority": 3
+  },
+  {
+    "id": "q44",
+    "question": "How does hotel deposits work for visitors in China?",
+    "category": "payment",
+    "priority": 2
+  },
+  {
+    "id": "q45",
+    "question": "What should I know about airport transfers when traveling in China?",
+    "category": "transport",
+    "priority": 1
+  },
+  {
+    "id": "q46",
+    "question": "What should I know about medical clinics for daily life in China?",
+    "category": "life",
+    "priority": 5
+  },
+  {
+    "id": "q47",
+    "question": "What should I prioritize for Hangzhou planning as a first-time visitor?",
+    "category": "cities",
+    "priority": 4
+  },
+  {
+    "id": "q48",
+    "question": "What are the best practices for staying connected while traveling in China?",
+    "category": "tips",
+    "priority": 3
+  },
+  {
+    "id": "q49",
+    "question": "What should I know about emergency contacts before arriving in China?",
+    "category": "prepare",
+    "priority": 2
+  },
+  {
+    "id": "q50",
+    "question": "How does tipping expectations work for visitors in China?",
+    "category": "payment",
+    "priority": 1
+  },
+  {
+    "id": "q51",
+    "question": "What should I know about luggage rules when traveling in China?",
+    "category": "transport",
+    "priority": 5
+  },
+  {
+    "id": "q52",
+    "question": "What should I know about pharmacies for daily life in China?",
+    "category": "life",
+    "priority": 4
+  },
+  {
+    "id": "q53",
+    "question": "What should I prioritize for Nanjing must-sees as a first-time visitor?",
+    "category": "cities",
+    "priority": 3
+  },
+  {
+    "id": "q54",
+    "question": "What are the best practices for document backups while traveling in China?",
+    "category": "tips",
+    "priority": 2
+  },
+  {
+    "id": "q55",
+    "question": "What should I know about arrival forms before arriving in China?",
+    "category": "prepare",
+    "priority": 1
+  },
+  {
+    "id": "q56",
+    "question": "How does getting receipts work for visitors in China?",
+    "category": "payment",
+    "priority": 5
+  },
+  {
+    "id": "q57",
+    "question": "What should I know about train changes when traveling in China?",
+    "category": "transport",
+    "priority": 4
+  },
+  {
+    "id": "q58",
+    "question": "What should I know about language barriers for daily life in China?",
+    "category": "life",
+    "priority": 3
+  },
+  {
+    "id": "q59",
+    "question": "What should I prioritize for Suzhou day trips as a first-time visitor?",
+    "category": "cities",
+    "priority": 2
+  },
+  {
+    "id": "q60",
+    "question": "What are the best practices for money safety while traveling in China?",
+    "category": "tips",
+    "priority": 1
+  },
+  {
+    "id": "q61",
+    "question": "What should I know about hotel booking proof before arriving in China?",
+    "category": "prepare",
+    "priority": 5
+  },
+  {
+    "id": "q62",
+    "question": "How does public transport cards work for visitors in China?",
+    "category": "payment",
+    "priority": 4
+  },
+  {
+    "id": "q63",
+    "question": "What should I know about platform navigation when traveling in China?",
+    "category": "transport",
+    "priority": 3
+  },
+  {
+    "id": "q64",
+    "question": "What should I know about laundry services for daily life in China?",
+    "category": "life",
+    "priority": 2
+  },
+  {
+    "id": "q65",
+    "question": "What should I prioritize for Chongqing logistics as a first-time visitor?",
+    "category": "cities",
+    "priority": 1
+  },
+  {
+    "id": "q66",
+    "question": "What are the best practices for street food choices while traveling in China?",
+    "category": "tips",
+    "priority": 5
+  },
+  {
+    "id": "q67",
+    "question": "What should I know about flight changes before arriving in China?",
+    "category": "prepare",
+    "priority": 4
+  },
+  {
+    "id": "q68",
+    "question": "How does online shopping payments work for visitors in China?",
+    "category": "payment",
+    "priority": 3
+  },
+  {
+    "id": "q69",
+    "question": "What should I know about rush hour planning when traveling in China?",
+    "category": "transport",
+    "priority": 2
+  },
+  {
+    "id": "q70",
+    "question": "What should I know about trash disposal for daily life in China?",
+    "category": "life",
+    "priority": 1
+  },
+  {
+    "id": "q71",
+    "question": "What should I prioritize for Guilin scenery as a first-time visitor?",
+    "category": "cities",
+    "priority": 5
+  },
+  {
+    "id": "q72",
+    "question": "What are the best practices for temple etiquette while traveling in China?",
+    "category": "tips",
+    "priority": 4
+  },
+  {
+    "id": "q73",
+    "question": "What should I know about baggage rules before arriving in China?",
+    "category": "prepare",
+    "priority": 3
+  },
+  {
+    "id": "q74",
+    "question": "How does exchange rates work for visitors in China?",
+    "category": "payment",
+    "priority": 2
+  },
+  {
+    "id": "q75",
+    "question": "What should I know about bike sharing when traveling in China?",
+    "category": "transport",
+    "priority": 1
+  },
+  {
+    "id": "q76",
+    "question": "What should I know about personal safety for daily life in China?",
+    "category": "life",
+    "priority": 5
+  },
+  {
+    "id": "q77",
+    "question": "What should I prioritize for Zhangjiajie access as a first-time visitor?",
+    "category": "cities",
+    "priority": 4
+  },
+  {
+    "id": "q78",
+    "question": "What are the best practices for crowd avoidance while traveling in China?",
+    "category": "tips",
+    "priority": 3
+  },
+  {
+    "id": "q79",
+    "question": "What should I know about language basics before arriving in China?",
+    "category": "prepare",
+    "priority": 2
+  },
+  {
+    "id": "q80",
+    "question": "How does merchant QR codes work for visitors in China?",
+    "category": "payment",
+    "priority": 1
+  },
+  {
+    "id": "q81",
+    "question": "What should I know about domestic flights when traveling in China?",
+    "category": "transport",
+    "priority": 5
+  },
+  {
+    "id": "q82",
+    "question": "What should I know about lost property for daily life in China?",
+    "category": "life",
+    "priority": 4
+  },
+  {
+    "id": "q83",
+    "question": "What should I prioritize for Kunming climate planning as a first-time visitor?",
+    "category": "cities",
+    "priority": 3
+  },
+  {
+    "id": "q84",
+    "question": "What are the best practices for weather layers while traveling in China?",
+    "category": "tips",
+    "priority": 2
+  },
+  {
+    "id": "q85",
+    "question": "What should I know about time zone planning before arriving in China?",
+    "category": "prepare",
+    "priority": 1
+  },
+  {
+    "id": "q86",
+    "question": "How does wallet top-ups work for visitors in China?",
+    "category": "payment",
+    "priority": 5
+  },
+  {
+    "id": "q87",
+    "question": "What should I know about sleeper trains when traveling in China?",
+    "category": "transport",
+    "priority": 4
+  },
+  {
+    "id": "q88",
+    "question": "What should I know about electric outlets for daily life in China?",
+    "category": "life",
+    "priority": 3
+  },
+  {
+    "id": "q89",
+    "question": "What should I prioritize for Harbin winter prep as a first-time visitor?",
+    "category": "cities",
+    "priority": 2
+  },
+  {
+    "id": "q90",
+    "question": "What are the best practices for day trip planning while traveling in China?",
+    "category": "tips",
+    "priority": 1
+  },
+  {
+    "id": "q91",
+    "question": "What should I know about seasonal packing before arriving in China?",
+    "category": "prepare",
+    "priority": 5
+  },
+  {
+    "id": "q92",
+    "question": "How does card acceptance work for visitors in China?",
+    "category": "payment",
+    "priority": 4
+  },
+  {
+    "id": "q93",
+    "question": "What should I know about intercity buses when traveling in China?",
+    "category": "transport",
+    "priority": 3
+  },
+  {
+    "id": "q94",
+    "question": "What should I know about opening hours for daily life in China?",
+    "category": "life",
+    "priority": 2
+  },
+  {
+    "id": "q95",
+    "question": "What should I prioritize for Qingdao coastal trips as a first-time visitor?",
+    "category": "cities",
+    "priority": 1
+  },
+  {
+    "id": "q96",
+    "question": "What are the best practices for map apps while traveling in China?",
+    "category": "tips",
+    "priority": 5
+  },
+  {
+    "id": "q97",
+    "question": "What should I know about document copies before arriving in China?",
+    "category": "prepare",
+    "priority": 4
+  },
+  {
+    "id": "q98",
+    "question": "How does bank alerts work for visitors in China?",
+    "category": "payment",
+    "priority": 3
+  },
+  {
+    "id": "q99",
+    "question": "What should I know about ride-hailing when traveling in China?",
+    "category": "transport",
+    "priority": 2
+  },
+  {
+    "id": "q100",
+    "question": "What should I know about sim card refills for daily life in China?",
+    "category": "life",
+    "priority": 1
+  }
+]

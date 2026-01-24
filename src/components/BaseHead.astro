@@ -47,7 +47,6 @@ const alternateLocales = resolvedAlternates
 const labelMap: Record<string, string> = {
 	category: 'Category',
 	guides: 'Guides',
-	blog: 'Blog',
 	search: 'Search',
 };
 
@@ -89,12 +88,6 @@ const breadcrumbJsonLd = {
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="sitemap" href="/sitemap.xml" />
-<link
-	rel="alternate"
-	type="application/rss+xml"
-	title={SITE_TITLE}
-	href={new URL('rss.xml', Astro.site)}
-/>
 <meta name="generator" content={Astro.generator} />
 <meta name="robots" content="index,follow" />
 <meta name="theme-color" content="#f8f1e4" />

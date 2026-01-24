@@ -1,20 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
-const blog = defineCollection({
-	loader: glob({ base: './src/content', pattern: '{en,zh}/blog/**/*.{md,mdx}' }),
-	schema: ({ image }) =>
-		z.object({
-			title: z.string(),
-			description: z.string(),
-			pubDate: z.coerce.date(),
-			updatedDate: z.coerce.date().optional(),
-			heroImage: image().optional(),
-			lang: z.enum(['en', 'zh', 'ko', 'ja', 'id', 'vi']).optional(),
-			translationKey: z.string().optional(),
-		}),
-});
-
 const guides = defineCollection({
 	loader: glob({ base: './src/content', pattern: '{en,zh}/guides/**/*.{md,mdx}' }),
 	schema: z.object({
@@ -30,4 +16,4 @@ const guides = defineCollection({
 	}),
 });
 
-export const collections = { blog, guides };
+export const collections = { guides };

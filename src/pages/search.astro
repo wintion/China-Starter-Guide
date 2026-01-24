@@ -20,6 +20,8 @@ const alternates = buildAlternates(Astro.url.pathname, Astro.site ?? Astro.url, 
 			lang={lang}
 			alternates={alternates}
 		/>
+		<link rel="preload" href="/pagefind/pagefind.js" as="script" />
+		<link rel="preload" href="/pagefind/pagefind.wasm" as="fetch" type="application/wasm" crossorigin />
 		<style>
 			.search-shell {
 				max-width: var(--content-width);
@@ -163,6 +165,13 @@ const alternates = buildAlternates(Astro.url.pathname, Astro.site ?? Astro.url, 
 				}
 			};
 
+			const runSearch = async (pagefind, query) => {
+				if (typeof pagefind.debouncedSearch === 'function') {
+					return pagefind.debouncedSearch(query, {}, 250);
+				}
+				return pagefind.search(query);
+			};
+
 			input.addEventListener('input', async (event) => {
 				const query = event.target.value.trim();
 
@@ -174,7 +183,11 @@ const alternates = buildAlternates(Astro.url.pathname, Astro.site ?? Astro.url, 
 
 				try {
 					const pagefind = await loadPagefind();
-					const search = await pagefind.search(query);
+					renderStatus('Searching...');
+					const search = await runSearch(pagefind, query);
+					if (!search) {
+						return;
+					}
 					const data = await Promise.all(search.results.map((result) => result.data()));
 					renderResults(data);
 				} catch (error) {

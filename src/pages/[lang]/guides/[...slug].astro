@@ -1,16 +1,16 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content';
-import BaseHead from '../../components/BaseHead.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
-import Layout from '../../components/Layout.astro';
-import SeoJsonLd from '../../components/SeoJsonLd.astro';
+import BaseHead from '../../../components/BaseHead.astro';
+import FormattedDate from '../../../components/FormattedDate.astro';
+import Layout from '../../../components/Layout.astro';
+import SeoJsonLd from '../../../components/SeoJsonLd.astro';
 import {
 	DEFAULT_LANG,
 	getLangFromId,
 	normalizeLangParam,
 	stripLangFromId,
 	withOptionalLangPrefix,
-} from '../../utils/i18n';
+} from '../../../utils/i18n';
 
 type Props = {
 	guide: CollectionEntry<'guides'>;
@@ -18,23 +18,29 @@ type Props = {
 
 export async function getStaticPaths() {
 	const guides = await getCollection('guides');
-	return guides
-		.filter((guide) => getLangFromId(guide.id) === DEFAULT_LANG)
-		.map((guide) => ({
-			params: { slug: stripLangFromId(guide.id).replace(/^guides\//, '') },
+	return guides.map((guide) => {
+		const lang = getLangFromId(guide.id);
+		const slug = stripLangFromId(guide.id).replace(/^guides\//, '');
+		return {
+			params: { lang, slug },
 			props: { guide },
-		}));
+		};
+	});
 }
 
 const { guide } = Astro.props;
 const { Content, headings } = await render(guide);
-const lang = normalizeLangParam(DEFAULT_LANG);
+const lang = normalizeLangParam(Astro.params.lang);
+if (lang === DEFAULT_LANG) {
+	const slugPath = Array.isArray(Astro.params.slug) ? Astro.params.slug.join('/') : Astro.params.slug ?? '';
+	return Astro.redirect(`/guides/${slugPath}`, 301);
+}
 
 const issueTitle = `Issue with guide: ${guide.id}`;
 const issueUrl = `https://github.com/wintion/China-Starter-Guide/issues/new?title=${encodeURIComponent(issueTitle)}`;
 const siteBase = Astro.site ?? Astro.url;
 const guidePath = stripLangFromId(guide.id);
-const guideUrl = new URL(`/${guidePath}`, siteBase).toString();
+const guideUrl = new URL(`/${lang}/${guidePath}`, siteBase).toString();
 
 const allGuides = await getCollection('guides');
 const relatedGuides = allGuides

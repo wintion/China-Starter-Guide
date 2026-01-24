@@ -1,31 +1,43 @@
 ---
 import { type CollectionEntry, getCollection } from 'astro:content';
-import BaseHead from '../../components/BaseHead.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
-import Layout from '../../components/Layout.astro';
+import BaseHead from '../../../components/BaseHead.astro';
+import FormattedDate from '../../../components/FormattedDate.astro';
+import Layout from '../../../components/Layout.astro';
 import {
 	buildAlternates,
 	DEFAULT_LANG,
 	getLangFromId,
+	normalizeLangParam,
 	stripLangFromId,
 	withOptionalLangPrefix,
-} from '../../utils/i18n';
+} from '../../../utils/i18n';
 
 export const categories = ['prepare', 'payment', 'transport', 'life', 'cities', 'tips'] as const;
 
 export async function getStaticPaths() {
 	const allGuides = await getCollection('guides');
-	const enGuides = allGuides.filter((guide) => getLangFromId(guide.id) === DEFAULT_LANG);
-	const categorySet = new Set(enGuides.map((guide) => guide.data.category));
-	return categories
-		.filter((category) => categorySet.has(category))
-		.map((category) => ({
-			params: { category },
-		}));
+	const langCategories = new Map<string, Set<string>>();
+	for (const guide of allGuides) {
+		const lang = getLangFromId(guide.id);
+		const categorySet = langCategories.get(lang) ?? new Set();
+		categorySet.add(guide.data.category);
+		langCategories.set(lang, categorySet);
+	}
+
+	return Array.from(langCategories.entries()).flatMap(([lang, categorySet]) =>
+		categories
+			.filter((category) => categorySet.has(category))
+			.map((category) => ({
+				params: { lang, category },
+			})),
+	);
 }
 
-const lang = DEFAULT_LANG;
+const lang = normalizeLangParam(Astro.params.lang);
 const { category } = Astro.params;
+if (lang === DEFAULT_LANG) {
+	return Astro.redirect(`/category/${category}`, 301);
+}
 
 if (!category || !categories.includes(category)) {
 	return new Response(null, { status: 404 });
@@ -37,7 +49,7 @@ const categoryLangs = Array.from(
 		allGuides.filter((entry) => entry.data.category === category).map((entry) => getLangFromId(entry.id)),
 	),
 );
-const alternates = buildAlternates(Astro.url.pathname, Astro.site ?? Astro.url, categoryLangs, lang);
+const alternates = buildAlternates(Astro.url.pathname, Astro.site ?? Astro.url, categoryLangs);
 
 const guides = allGuides
 	.filter((entry) => getLangFromId(entry.id) === lang)
@@ -442,10 +454,13 @@ const withLang = (path: string) => withOptionalLangPrefix(path, lang);
 						<h2 id="featured-guides">{featuredHeading}</h2>
 						<div class="featured-grid">
 							{featuredGuides.map((guide) => (
-								<a class="featured-card" href={withLang(`/${stripLangFromId(guide.id)}`)}>
-									<strong>{guide.data.title}</strong>
-									<p>{guide.data.description}</p>
-								</a>
+									<a
+										class="featured-card"
+										href={withLang(`/${stripLangFromId(guide.id)}`)}
+									>
+										<strong>{guide.data.title}</strong>
+										<p>{guide.data.description}</p>
+									</a>
 							))}
 						</div>
 					</section>
@@ -462,7 +477,9 @@ const withLang = (path: string) => withOptionalLangPrefix(path, lang);
 										<ul>
 											{topic.entries.map((entry) => (
 												<li>
-													<a href={withLang(`/${stripLangFromId(entry.id)}`)}>{entry.data.title}</a>
+													<a href={withLang(`/${stripLangFromId(entry.id)}`)}>
+														{entry.data.title}
+													</a>
 												</li>
 											))}
 										</ul>

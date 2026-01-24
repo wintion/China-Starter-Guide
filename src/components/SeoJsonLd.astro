@@ -1,20 +1,62 @@
 ---
+import type { ImageMetadata } from 'astro';
+import { SITE_TITLE } from '../consts';
+
 interface Props {
 	title: string;
 	description: string;
 	url: string;
 	dateModified: string;
+	datePublished?: string;
+	image?: ImageMetadata | string;
+	type?: 'Article';
+	authorName?: string;
+	publisherName?: string;
+	publisherLogo?: string;
+	inLanguage?: string;
 }
 
-const { title, description, url, dateModified } = Astro.props;
+const {
+	title,
+	description,
+	url,
+	dateModified,
+	datePublished,
+	image,
+	type = 'Article',
+	authorName = SITE_TITLE,
+	publisherName = SITE_TITLE,
+	publisherLogo = '/logo.svg',
+	inLanguage,
+} = Astro.props;
+
+const siteBase = Astro.site ?? Astro.url;
+const imageSource = image ? (typeof image === 'string' ? image : image.src) : undefined;
+const imageUrl = imageSource ? new URL(imageSource, siteBase).toString() : undefined;
+const logoUrl = new URL(publisherLogo, siteBase).toString();
 
 const jsonLd = {
 	'@context': 'https://schema.org',
-	'@type': 'Article',
+	'@type': type,
 	headline: title,
 	description,
 	url,
 	dateModified,
+	...(inLanguage ? { inLanguage } : {}),
+	...(datePublished ? { datePublished } : {}),
+	...(imageUrl ? { image: [imageUrl] } : {}),
+	author: {
+		'@type': 'Organization',
+		name: authorName,
+	},
+	publisher: {
+		'@type': 'Organization',
+		name: publisherName,
+		logo: {
+			'@type': 'ImageObject',
+			url: logoUrl,
+		},
+	},
 	mainEntityOfPage: {
 		'@type': 'WebPage',
 		'@id': url,

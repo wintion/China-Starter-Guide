@@ -1,0 +1,210 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Layout from '../components/Layout.astro';
+import { buildAlternates, DEFAULT_LANG, getLangFromId, withOptionalLangPrefix } from '../utils/i18n';
+
+const lang = DEFAULT_LANG;
+const allGuides = await getCollection('guides');
+const availableLangs = Array.from(new Set(allGuides.map((guide) => getLangFromId(guide.id))));
+const alternates = buildAlternates(Astro.url.pathname, Astro.site ?? Astro.url, availableLangs, lang);
+const withLang = (path: string) => withOptionalLangPrefix(path, lang);
+const issueUrl = 'https://github.com/wintion/China-Starter-Guide/issues/new';
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<BaseHead
+			title="About China Starter Guide"
+			description="Who maintains this site, why it exists, and the disclaimer."
+			lang={lang}
+			alternates={alternates}
+		/>
+		<style>
+			.page {
+				display: grid;
+				gap: 2.5rem;
+			}
+			.hero {
+				padding: 2.5rem;
+				border: 1px solid rgb(var(--stroke));
+				border-radius: 24px;
+				background: var(--surface);
+				box-shadow: var(--shadow-soft);
+				position: relative;
+				overflow: hidden;
+			}
+			.hero::before {
+				content: "";
+				position: absolute;
+				inset: 0;
+				background:
+					radial-gradient(360px 220px at 12% 0%, rgba(47, 111, 85, 0.2), transparent 70%),
+					radial-gradient(320px 220px at 92% 20%, rgba(198, 64, 43, 0.18), transparent 60%);
+				opacity: 0.9;
+				pointer-events: none;
+			}
+			.hero > * {
+				position: relative;
+			}
+			.hero h1 {
+				margin-bottom: 0.75rem;
+				font-size: 2.6rem;
+			}
+			.hero p {
+				max-width: 720px;
+				color: rgb(var(--gray-dark));
+			}
+			.section-grid {
+				display: grid;
+				gap: 1.5rem;
+				grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+			}
+			.panel {
+				border: 1px solid rgb(var(--stroke));
+				border-radius: 20px;
+				padding: 1.5rem;
+				background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 249, 240, 0.92));
+				box-shadow: 0 10px 18px rgba(46, 34, 20, 0.08);
+			}
+			.panel h2 {
+				margin-top: 0;
+				margin-bottom: 0.6rem;
+				font-size: 1.4rem;
+			}
+			.panel ul {
+				margin: 0.6rem 0 0;
+				padding-left: 1.1rem;
+			}
+			.panel li {
+				margin: 0.35rem 0;
+			}
+			.disclaimer {
+				border: 1px solid rgba(198, 64, 43, 0.35);
+				background: rgba(255, 248, 240, 0.9);
+				border-radius: 20px;
+				padding: 1.6rem;
+				box-shadow: 0 10px 16px rgba(46, 34, 20, 0.08);
+			}
+			.disclaimer h2 {
+				margin-top: 0;
+				color: var(--accent-warm);
+			}
+			.disclaimer p {
+				margin: 0.6rem 0;
+				color: rgb(var(--gray-dark));
+			}
+			.cta {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				justify-content: space-between;
+				gap: 1rem;
+				padding: 1.5rem 1.8rem;
+				border-radius: 20px;
+				background: rgba(47, 111, 85, 0.12);
+				border: 1px solid rgba(47, 111, 85, 0.3);
+			}
+			.cta a {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.4rem;
+				padding: 0.55rem 1.2rem;
+				border-radius: 999px;
+				background: var(--accent);
+				color: white;
+				text-decoration: none;
+				font-weight: 600;
+			}
+			.cta a:hover {
+				background: var(--accent-dark);
+			}
+			@media (max-width: 720px) {
+				.hero {
+					padding: 1.8rem;
+				}
+				.hero h1 {
+					font-size: 2.1rem;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<Layout>
+			<main class="page">
+				<section class="hero">
+					<h1>About China Starter Guide</h1>
+					<p>
+						This is a practical guide for first-time foreign visitors to China. The goal is to reduce
+						uncertainty before departure and after arrival with clear, actionable guidance.
+					</p>
+					<p>
+						Start with <a href={withLang('/category/prepare')}>Prepare</a>,
+						<a href={withLang('/category/payment')}>Payment</a>, and
+						<a href={withLang('/category/transport')}>Transport</a> to cover the essentials.
+					</p>
+				</section>
+
+				<section class="section-grid">
+					<article class="panel">
+						<h2>Who maintains this site</h2>
+						<p>
+							The site is maintained by a native Chinese creator who works in the internet industry and is
+							deeply interested in digital products and content.
+						</p>
+						<ul>
+							<li>Familiar with everyday life and travel flows in China</li>
+							<li>Focused on the real questions first-time visitors face</li>
+							<li>Committed to ongoing updates</li>
+						</ul>
+					</article>
+					<article class="panel">
+						<h2>Why this site exists</h2>
+						<p>
+							The goal is to remove the most common uncertainties for first-time visitors: entry
+							requirements, payments, connectivity, transport, and city planning.
+						</p>
+						<ul>
+							<li>Free to use</li>
+							<li>Hosted on GitHub</li>
+							<li>Issues are welcome for feedback or corrections</li>
+						</ul>
+					</article>
+					<article class="panel">
+						<h2>Sources and review</h2>
+						<p>
+							Content is compiled from public sources and personally reviewed by the maintainer. We update
+							regularly, but cannot guarantee that every detail is always complete, accurate, or current.
+						</p>
+					</article>
+				</section>
+
+				<section class="disclaimer">
+					<h2>Disclaimer</h2>
+					<p>
+						This site is provided for general information only. It is not legal, policy, or professional
+						advice. Always verify details through official sources and make independent decisions for your
+						trip.
+					</p>
+					<p>
+						If any loss or impact results from errors, omissions, or outdated information, the maintainer
+						assumes no legal or non-legal responsibility. Visitors accept 100% of the risk and responsibility
+						for their own actions.
+					</p>
+					<p>
+						If you spot an issue or want to contribute, please open a GitHub Issue.
+					</p>
+				</section>
+
+				<section class="cta">
+					<div>
+						<strong>Found something wrong?</strong>
+						<span>Open an Issue and we will review and update it.</span>
+					</div>
+					<a href={issueUrl} target="_blank" rel="noreferrer">Open an Issue</a>
+				</section>
+			</main>
+		</Layout>
+	</body>
+</html>

@@ -1,0 +1,72 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Layout from '../components/Layout.astro';
+import { DEFAULT_LANG, withOptionalLangPrefix } from '../utils/i18n';
+
+const lang = DEFAULT_LANG;
+const homeUrl = withOptionalLangPrefix('/', lang);
+const searchUrl = withOptionalLangPrefix('/search', lang);
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<BaseHead
+			title="Page not found | China Starter Guide"
+			description="We couldn't find that page. Try the homepage or search the guide."
+			lang={lang}
+		/>
+		<style>
+			.not-found {
+				max-width: var(--content-width);
+				margin: 0 auto;
+				padding: 3rem 1rem 4rem;
+				text-align: center;
+			}
+			.not-found h1 {
+				font-size: clamp(2rem, 4vw, 3rem);
+				margin-bottom: 0.75rem;
+			}
+			.not-found p {
+				color: rgb(var(--gray-dark));
+				margin: 0 auto 1.5rem;
+				max-width: 520px;
+			}
+			.not-found .actions {
+				display: flex;
+				gap: 0.75rem;
+				justify-content: center;
+				flex-wrap: wrap;
+			}
+			.not-found a {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.35rem;
+				padding: 0.6rem 1.1rem;
+				border-radius: 999px;
+				border: 1px solid rgba(47, 111, 85, 0.35);
+				background: rgba(47, 111, 85, 0.08);
+				color: var(--accent-dark);
+				text-decoration: none;
+				font-weight: 600;
+				transition: transform 0.2s ease, box-shadow 0.2s ease;
+			}
+			.not-found a:hover {
+				transform: translateY(-1px);
+				box-shadow: var(--shadow-soft);
+			}
+		</style>
+	</head>
+	<body>
+		<Layout>
+			<main class="not-found">
+				<h1>Page not found</h1>
+				<p>The page you requested doesn’t exist or has moved.</p>
+				<div class="actions">
+					<a href={homeUrl}>Back to home</a>
+					<a href={searchUrl}>Search the guide</a>
+				</div>
+			</main>
+		</Layout>
+	</body>
+</html>

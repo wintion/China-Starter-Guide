@@ -3,18 +3,85 @@
 // all pages through the use of the <BaseHead /> component.
 import '../styles/global.css';
 import type { ImageMetadata } from 'astro';
-import { SITE_TITLE } from '../consts';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 interface Props {
 	title: string;
 	description: string;
 	image?: ImageMetadata | string;
+	type?: 'website' | 'article';
+	lang?: 'en' | 'zh';
+	alternates?: { lang: string; url: string }[];
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image = '/banner.svg' } = Astro.props;
-const imageUrl = typeof image === 'string' ? new URL(image, Astro.url) : new URL(image.src, Astro.url);
+const {
+	title,
+	description = SITE_DESCRIPTION,
+	image = '/og-default.png',
+	type = 'website',
+	lang = 'en',
+	alternates,
+} = Astro.props;
+const siteBase = Astro.site ?? Astro.url;
+const imageUrl = typeof image === 'string' ? new URL(image, siteBase) : new URL(image.src, siteBase);
+const pageUrl = canonicalURL.toString();
+const fullTitle = title.includes(SITE_TITLE) ? title : `${title} | ${SITE_TITLE}`;
+const ogLocaleMap: Record<string, string> = {
+	en: 'en_US',
+	zh: 'zh_CN',
+	ja: 'ja_JP',
+	ko: 'ko_KR',
+	id: 'id_ID',
+	vi: 'vi_VN',
+};
+const ogLocale = ogLocaleMap[lang] ?? 'en_US';
+
+const resolvedAlternates = alternates?.length ? alternates : [{ lang, url: pageUrl }];
+const defaultAlternate = resolvedAlternates.find((alt) => alt.lang === 'en') ?? resolvedAlternates[0];
+const alternateLocales = resolvedAlternates
+	.filter((alt) => alt.lang !== lang)
+	.map((alt) => ogLocaleMap[alt.lang] ?? 'en_US');
+
+const labelMap: Record<string, string> = {
+	category: 'Category',
+	guides: 'Guides',
+	blog: 'Blog',
+	search: 'Search',
+};
+
+const toTitle = (value: string) =>
+	value
+		.split('-')
+		.map((part) => (part ? `${part[0].toUpperCase()}${part.slice(1)}` : ''))
+		.join(' ');
+
+const segments = canonicalURL.pathname.split('/').filter(Boolean);
+const breadcrumbItems = [
+	{ name: SITE_TITLE, url: new URL('/', siteBase).toString() },
+];
+
+let pathAccumulator = '';
+for (const segment of segments) {
+	pathAccumulator += `/${segment}`;
+	if (segment === 'en' || segment === 'zh') {
+		continue;
+	}
+	const name = labelMap[segment] ?? toTitle(segment);
+	breadcrumbItems.push({ name, url: new URL(pathAccumulator, siteBase).toString() });
+}
+
+const breadcrumbJsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: breadcrumbItems.map((item, index) => ({
+		'@type': 'ListItem',
+		position: index + 1,
+		name: item.name,
+		item: item.url,
+	})),
+};
 ---
 
 <!-- Global Metadata -->
@@ -29,6 +96,8 @@ const imageUrl = typeof image === 'string' ? new URL(image, Astro.url) : new URL
 	href={new URL('rss.xml', Astro.site)}
 />
 <meta name="generator" content={Astro.generator} />
+<meta name="robots" content="index,follow" />
+<meta name="theme-color" content="#f8f1e4" />
 
 <!-- Font preloads -->
 <link rel="preload" href="/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin />
@@ -36,22 +105,35 @@ const imageUrl = typeof image === 'string' ? new URL(image, Astro.url) : new URL
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
+{resolvedAlternates.map((alternate) => (
+	<link rel="alternate" hreflang={alternate.lang} href={alternate.url} />
+))}
+<link rel="alternate" hreflang="x-default" href={defaultAlternate.url} />
 
 <!-- Primary Meta Tags -->
-<title>{title}</title>
-<meta name="title" content={title} />
+<title>{fullTitle}</title>
+<meta name="title" content={fullTitle} />
 <meta name="description" content={description} />
 
 <!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
-<meta property="og:url" content={Astro.url} />
-<meta property="og:title" content={title} />
+<meta property="og:type" content={type} />
+<meta property="og:url" content={pageUrl} />
+<meta property="og:title" content={fullTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={imageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:site_name" content={SITE_TITLE} />
+<meta property="og:locale" content={ogLocale} />
+{alternateLocales.map((locale) => (
+	<meta property="og:locale:alternate" content={locale} />
+))}
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={Astro.url} />
-<meta property="twitter:title" content={title} />
+<meta property="twitter:url" content={pageUrl} />
+<meta property="twitter:title" content={fullTitle} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={imageUrl} />
+
+<script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>

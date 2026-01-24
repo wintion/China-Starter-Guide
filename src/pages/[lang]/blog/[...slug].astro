@@ -1,13 +1,13 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content';
-import BlogPost from '../../layouts/BlogPost.astro';
+import BlogPost from '../../../layouts/BlogPost.astro';
 import {
 	DEFAULT_LANG,
 	getLangFromId,
 	normalizeLangParam,
 	stripLangFromId,
 	withOptionalLangPrefix,
-} from '../../utils/i18n';
+} from '../../../utils/i18n';
 
 type Props = {
 	post: CollectionEntry<'blog'>;
@@ -15,17 +15,23 @@ type Props = {
 
 export async function getStaticPaths() {
 	const posts = await getCollection('blog');
-	return posts
-		.filter((post) => getLangFromId(post.id) === DEFAULT_LANG)
-		.map((post) => ({
-			params: { slug: stripLangFromId(post.id).replace(/^blog\//, '') },
+	return posts.map((post) => {
+		const lang = getLangFromId(post.id);
+		const slug = stripLangFromId(post.id).replace(/^blog\//, '');
+		return {
+			params: { lang, slug },
 			props: { post },
-		}));
+		};
+	});
 }
 
 const { post } = Astro.props;
 const { Content } = await render(post);
-const lang = normalizeLangParam(DEFAULT_LANG);
+const lang = normalizeLangParam(Astro.params.lang);
+if (lang === DEFAULT_LANG) {
+	const slugPath = Array.isArray(Astro.params.slug) ? Astro.params.slug.join('/') : Astro.params.slug ?? '';
+	return Astro.redirect(`/blog/${slugPath}`, 301);
+}
 const siteBase = Astro.site ?? Astro.url;
 const postPath = stripLangFromId(post.id);
 const allPosts = await getCollection('blog');

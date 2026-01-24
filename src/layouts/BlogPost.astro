@@ -4,42 +4,79 @@ import type { CollectionEntry } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Layout from '../components/Layout.astro';
+import SeoJsonLd from '../components/SeoJsonLd.astro';
 
-type Props = CollectionEntry<'blog'>['data'];
+type Props = CollectionEntry<'blog'>['data'] & {
+	lang?: 'en' | 'zh';
+	alternates?: { lang: string; url: string }[];
+};
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, lang = 'en', alternates } = Astro.props;
+const pageUrl = new URL(Astro.url.pathname, Astro.site).toString();
+const published = pubDate?.toISOString();
+const modified = (updatedDate ?? pubDate)?.toISOString();
 ---
 
-<html lang="en">
+<html lang={lang}>
 	<head>
-		<BaseHead title={title} description={description} />
+		<BaseHead
+			title={title}
+			description={description}
+			image={heroImage ?? '/og-default.png'}
+			type="article"
+			lang={lang}
+			alternates={alternates}
+		/>
+		{published && modified && (
+			<SeoJsonLd
+				title={title}
+				description={description}
+				url={pageUrl}
+				datePublished={published}
+				dateModified={modified}
+				type="BlogPosting"
+				image={heroImage ?? '/og-default.png'}
+				inLanguage={lang}
+			/>
+		)}
 		<style>
 			main {
 				width: calc(100% - 2em);
 				max-width: 100%;
-				margin: 0;
+				margin: 0 auto;
+				padding-bottom: 3rem;
 			}
 			.hero-image {
 				width: 100%;
+				max-width: var(--content-width);
+				margin: 1.5rem auto 0;
+				padding: 0 1rem;
 			}
 			.hero-image img {
 				display: block;
 				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
+				border-radius: 18px;
+				border: 1px solid rgb(var(--stroke));
+				box-shadow: var(--shadow-soft);
+				background: var(--surface);
 			}
 			.prose {
 				width: calc(100% - 2em);
 				max-width: var(--content-width);
-				margin: auto;
-				padding: 1em;
+				margin: -2rem auto 0;
+				padding: 2rem 2rem 2.5rem;
 				color: rgb(var(--gray-dark));
+				background: var(--surface);
+				border: 1px solid rgb(var(--stroke));
+				border-radius: 24px;
+				box-shadow: var(--shadow-lift);
+				position: relative;
 			}
 			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
+				margin-bottom: 1.5em;
+				padding: 0.5em 0 0;
+				text-align: left;
+				line-height: 1.1;
 			}
 			.title h1 {
 				margin: 0 0 0.5em 0;
@@ -50,6 +87,19 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			}
 			.last-updated-on {
 				font-style: italic;
+			}
+			.title hr {
+				margin-top: 1.5rem;
+				border-top: 1px solid rgba(47, 111, 85, 0.25);
+			}
+			@media (max-width: 720px) {
+				.prose {
+					padding: 1.5rem;
+					margin-top: -1rem;
+				}
+				.title {
+					text-align: left;
+				}
 			}
 		</style>
 	</head>

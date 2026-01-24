@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && pagefind --site dist",
+    "build": "astro build && pagefind --site dist --glob \"{index.html,about/index.html,blog/**/*.html,category/**/*.html,guides/**/*.html,search/**/*.html,zh/**/*.html,ja/**/*.html,ko/**/*.html,id/**/*.html,vi/**/*.html}\"",
     "preview": "astro preview",
     "astro": "astro"
   },

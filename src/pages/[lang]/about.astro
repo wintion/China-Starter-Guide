@@ -1,12 +1,21 @@
 ---
 import { getCollection } from 'astro:content';
-import Layout from '../layouts/BlogPost.astro';
-import { buildAlternates, DEFAULT_LANG, getLangFromId } from '../utils/i18n';
+import Layout from '../../layouts/BlogPost.astro';
+import { buildAlternates, DEFAULT_LANG, getLangFromId, normalizeLangParam } from '../../utils/i18n';
 
-const lang = DEFAULT_LANG;
+export async function getStaticPaths() {
+	const guides = await getCollection('guides');
+	const langs = Array.from(new Set(guides.map((guide) => getLangFromId(guide.id))));
+	return langs.map((lang) => ({ params: { lang } }));
+}
+
+const lang = normalizeLangParam(Astro.params.lang);
+if (lang === DEFAULT_LANG) {
+	return Astro.redirect('/about', 301);
+}
 const allGuides = await getCollection('guides');
 const availableLangs = Array.from(new Set(allGuides.map((guide) => getLangFromId(guide.id))));
-const alternates = buildAlternates(Astro.url.pathname, Astro.site ?? Astro.url, availableLangs, lang);
+const alternates = buildAlternates(Astro.url.pathname, Astro.site ?? Astro.url, availableLangs, DEFAULT_LANG);
 ---
 
 <Layout

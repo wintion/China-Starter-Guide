@@ -1,0 +1,254 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import BaseHead from '../../../components/BaseHead.astro';
+import FormattedDate from '../../../components/FormattedDate.astro';
+import Layout from '../../../components/Layout.astro';
+import SeoJsonLd from '../../../components/SeoJsonLd.astro';
+import {
+	DEFAULT_LANG,
+	getLangFromId,
+	normalizeLangParam,
+	stripLangFromId,
+	withOptionalLangPrefix,
+} from '../../../utils/i18n';
+
+type Props = {
+	guide: CollectionEntry<'guides'>;
+};
+
+export async function getStaticPaths() {
+	const guides = await getCollection('guides');
+	return guides.map((guide) => {
+		const lang = getLangFromId(guide.id);
+		const slug = stripLangFromId(guide.id).replace(/^guides\//, '');
+		return {
+			params: { lang, slug },
+			props: { guide },
+		};
+	});
+}
+
+const { guide } = Astro.props;
+const { Content, headings } = await render(guide);
+const lang = normalizeLangParam(Astro.params.lang);
+if (lang === DEFAULT_LANG) {
+	const slugPath = Array.isArray(Astro.params.slug) ? Astro.params.slug.join('/') : Astro.params.slug ?? '';
+	return Astro.redirect(`/guides/${slugPath}`, 301);
+}
+
+const issueTitle = `Issue with guide: ${guide.id}`;
+const issueUrl = `https://github.com/wintion/China-Starter-Guide/issues/new?title=${encodeURIComponent(issueTitle)}`;
+const siteBase = Astro.site ?? Astro.url;
+const guidePath = stripLangFromId(guide.id);
+const guideUrl = new URL(`/${lang}/${guidePath}`, siteBase).toString();
+
+const allGuides = await getCollection('guides');
+const relatedGuides = allGuides
+	.filter((entry) => getLangFromId(entry.id) === lang)
+	.filter((entry) => entry.data.category === guide.data.category && entry.id !== guide.id)
+	.sort((a, b) => b.data.lastUpdated.valueOf() - a.data.lastUpdated.valueOf())
+	.slice(0, 5);
+
+const alternates = allGuides
+	.filter((entry) => stripLangFromId(entry.id) === guidePath)
+	.map((entry) => {
+		const entryLang = getLangFromId(entry.id);
+		return {
+			lang: entryLang,
+			url: new URL(withOptionalLangPrefix(`/${stripLangFromId(entry.id)}`, entryLang), siteBase).toString(),
+		};
+	});
+const withLang = (path: string) => withOptionalLangPrefix(path, lang);
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<BaseHead
+			title={guide.data.title}
+			description={guide.data.description}
+			type="article"
+			lang={lang}
+			alternates={alternates}
+		/>
+		<SeoJsonLd
+			title={guide.data.title}
+			description={guide.data.description}
+			url={guideUrl}
+			dateModified={guide.data.lastUpdated.toISOString()}
+			image="/og-default.png"
+			inLanguage={lang}
+		/>
+		<style>
+			.guide-header {
+				margin-bottom: 2.5rem;
+				padding: 2rem;
+				border-radius: 24px;
+				background: var(--surface);
+				border: 1px solid rgb(var(--stroke));
+				box-shadow: var(--shadow-soft);
+			}
+			.guide-header p {
+				margin: 0.25rem 0;
+			}
+			.guide-meta {
+				color: rgb(var(--gray));
+				font-size: 0.95rem;
+			}
+			.guide-body {
+				display: grid;
+				grid-template-columns: minmax(0, 1fr);
+				gap: 2rem;
+			}
+			.toc {
+				border: 1px solid rgb(var(--stroke));
+				border-radius: 18px;
+				padding: 1.25rem;
+				background: var(--surface);
+				box-shadow: var(--shadow-soft);
+				position: sticky;
+				top: 120px;
+			}
+			.toc h2 {
+				font-size: 1.25rem;
+				margin-bottom: 0.5rem;
+			}
+			.toc ol {
+				margin: 0;
+				padding-left: 1.25rem;
+			}
+			.toc li {
+				margin: 0.25rem 0;
+			}
+			.toc a {
+				color: rgb(var(--gray-dark));
+				text-decoration: none;
+			}
+			.toc a:hover {
+				color: var(--accent);
+			}
+			.guide-content {
+				border: 1px solid rgb(var(--stroke));
+				border-radius: 24px;
+				padding: 2rem;
+				background: var(--surface);
+				box-shadow: var(--shadow-soft);
+			}
+			.related {
+				margin-top: 3rem;
+				border-top: 1px solid rgb(var(--stroke));
+				padding-top: 2rem;
+			}
+			.related h2 {
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+				margin-bottom: 1rem;
+			}
+			.related h2::before {
+				content: "";
+				width: 28px;
+				height: 6px;
+				border-radius: 999px;
+				background: var(--accent);
+				box-shadow: 0 4px 10px rgba(47, 111, 85, 0.25);
+			}
+			.related ul {
+				list-style: none;
+				padding: 0;
+				margin: 1rem 0 0;
+				display: grid;
+				gap: 0.9rem;
+			}
+			.related li {
+				border: 1px solid rgb(var(--stroke));
+				border-radius: 16px;
+				padding: 0.9rem 1rem;
+				background: var(--surface);
+				box-shadow: 0 8px 16px rgba(46, 34, 20, 0.08);
+				transition: transform 0.2s ease, border-color 0.2s ease;
+			}
+			.related li:hover {
+				transform: translateY(-2px);
+				border-color: rgba(47, 111, 85, 0.35);
+			}
+			.related a {
+				color: var(--accent-dark);
+				text-decoration: underline;
+				text-decoration-thickness: 1.5px;
+				text-underline-offset: 0.18em;
+			}
+			.related a:hover {
+				color: var(--accent-warm);
+			}
+			.report-issue {
+				margin-top: 0.75rem;
+				font-size: 0.95rem;
+			}
+			.report-issue a {
+				color: rgb(var(--gray-dark));
+				text-decoration: none;
+			}
+			.report-issue a:hover {
+				color: var(--accent);
+			}
+			@media (min-width: 900px) {
+				.guide-body {
+					grid-template-columns: 240px minmax(0, 1fr);
+					align-items: start;
+				}
+			}
+			@media (max-width: 720px) {
+				.guide-header,
+				.guide-content {
+					padding: 1.5rem;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<Layout>
+			<main>
+				<header class="guide-header">
+					<h1>{guide.data.title}</h1>
+					<p>{guide.data.description}</p>
+					<p class="guide-meta">
+						Last updated <FormattedDate date={guide.data.lastUpdated} />
+					</p>
+					<p class="report-issue">
+						<a href={issueUrl} target="_blank" rel="noreferrer">Report an issue</a>
+					</p>
+				</header>
+				<section class="guide-body">
+					{headings.length > 0 && (
+						<aside class="toc">
+							<h2>On this page</h2>
+							<ol>
+								{headings.map((heading) => (
+									<li>
+										<a href={`#${heading.slug}`}>{heading.text}</a>
+									</li>
+								))}
+							</ol>
+						</aside>
+					)}
+					<article class="guide-content">
+						<Content />
+					</article>
+				</section>
+				{relatedGuides.length > 0 && (
+					<section class="related">
+						<h2>Related guides</h2>
+						<ul>
+							{relatedGuides.map((entry) => (
+								<li>
+									<a href={withLang(`/${stripLangFromId(entry.id)}`)}>{entry.data.title}</a>
+								</li>
+							))}
+						</ul>
+					</section>
+				)}
+			</main>
+		</Layout>
+	</body>
+</html>

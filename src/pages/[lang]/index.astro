@@ -1,0 +1,270 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import FeaturedEntryPoints from '../../components/FeaturedEntryPoints.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Layout from '../../components/Layout.astro';
+import {
+	buildAlternates,
+	DEFAULT_LANG,
+	getLangFromId,
+	normalizeLangParam,
+	stripLangFromId,
+	withOptionalLangPrefix,
+} from '../../utils/i18n';
+
+export async function getStaticPaths() {
+	const guides = await getCollection('guides');
+	const langs = Array.from(new Set(guides.map((guide) => getLangFromId(guide.id))));
+	return langs.map((lang) => ({ params: { lang } }));
+}
+
+const lang = normalizeLangParam(Astro.params.lang);
+if (lang === DEFAULT_LANG) {
+	return Astro.redirect('/', 301);
+}
+const allGuides = await getCollection('guides');
+const availableLangs = Array.from(new Set(allGuides.map((guide) => getLangFromId(guide.id))));
+const alternates = buildAlternates(Astro.url.pathname, Astro.site ?? Astro.url, availableLangs);
+
+const guides = allGuides
+	.filter((guide) => getLangFromId(guide.id) === lang)
+	.sort((a, b) => b.data.lastUpdated.valueOf() - a.data.lastUpdated.valueOf());
+
+const recentGuides = guides.slice(0, 6);
+
+const topConcerns = [
+	{
+		path: '/guides/payment/how-to-pay-in-china',
+		title: 'How to Pay in China',
+		description: 'Cash, cards, and mobile wallets you can use on day one.',
+	},
+	{
+		path: '/guides/transport/high-speed-rail-basics',
+		title: 'High-Speed Rail Basics',
+		description: 'Booking, boarding, and picking the right seat class.',
+	},
+	{
+		path: '/guides/prepare/visa-free-explained',
+		title: 'Visa-Free Entry Explained',
+		description: 'Understand eligibility, limits, and required documents.',
+	},
+];
+
+const primaryCtas = [
+	{
+		path: '/category/prepare',
+		title: 'Prepare before arrival',
+		description: 'Visas, documents, and essential setup.',
+	},
+	{
+		path: '/category/payment',
+		title: 'Pay smoothly',
+		description: 'Wallets, cards, and cash expectations.',
+	},
+	{
+		path: '/category/transport',
+		title: 'Get around fast',
+		description: 'Trains, metros, and local travel basics.',
+	},
+];
+
+const formatCategory = (value: string) => `${value.charAt(0).toUpperCase()}${value.slice(1)}`;
+const withLang = (path: string) => withOptionalLangPrefix(path, lang);
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<BaseHead
+			title="China Starter Guide"
+			description="Practical, content-first guidance for first-time foreigners visiting China."
+			lang={lang}
+			alternates={alternates}
+		/>
+		<style>
+			.hero {
+				padding: 2.5rem;
+				border: 1px solid rgb(var(--stroke));
+				border-radius: 24px;
+				background: var(--surface);
+				box-shadow: var(--shadow-soft);
+				position: relative;
+				overflow: hidden;
+			}
+			.hero::before {
+				content: "";
+				position: absolute;
+				inset: 0;
+				background:
+					radial-gradient(360px 200px at 10% 0%, rgba(47, 111, 85, 0.2), transparent 70%),
+					radial-gradient(320px 220px at 92% 18%, rgba(198, 64, 43, 0.18), transparent 60%);
+				opacity: 0.9;
+				pointer-events: none;
+			}
+			.hero > * {
+				position: relative;
+			}
+			.hero h1 {
+				font-size: 3rem;
+				margin-bottom: 0.8rem;
+			}
+			.hero p {
+				max-width: 680px;
+				color: rgb(var(--gray-dark));
+			}
+			.section {
+				margin-top: 3.25rem;
+			}
+			.section > h2 {
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+				margin-bottom: 1rem;
+			}
+			.section > h2::before {
+				content: "";
+				width: 28px;
+				height: 6px;
+				border-radius: 999px;
+				background: var(--accent);
+				box-shadow: 0 4px 10px rgba(47, 111, 85, 0.25);
+			}
+			.card-grid {
+				display: grid;
+				gap: 1.25rem;
+				grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+				margin-top: 1.5rem;
+			}
+			.card {
+				display: block;
+				border: 1px solid rgb(var(--stroke));
+				border-radius: 18px;
+				padding: 1rem;
+				background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 249, 240, 0.95));
+				box-shadow: 0 10px 18px rgba(46, 34, 20, 0.08);
+				text-decoration: none;
+				color: rgb(var(--black));
+				transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+			}
+			.card strong {
+				display: block;
+				font-size: 1.05rem;
+			}
+			.card:hover {
+				border-color: rgba(47, 111, 85, 0.35);
+				box-shadow: var(--shadow-lift);
+				transform: translateY(-2px);
+			}
+			.card p {
+				margin: 0.4rem 0 0;
+				color: rgb(var(--gray-dark));
+			}
+			.list {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+				display: grid;
+				gap: 1rem;
+			}
+			.list li {
+				border: 1px solid rgb(var(--stroke));
+				border-radius: 16px;
+				padding: 1rem 1.1rem;
+				background: var(--surface);
+				box-shadow: 0 8px 16px rgba(46, 34, 20, 0.08);
+				transition: transform 0.2s ease, border-color 0.2s ease;
+			}
+			.list li:hover {
+				transform: translateY(-2px);
+				border-color: rgba(47, 111, 85, 0.35);
+			}
+			.list a {
+				text-decoration: underline;
+				text-decoration-thickness: 1.5px;
+				text-underline-offset: 0.18em;
+				color: var(--accent-dark);
+			}
+			.list a:hover {
+				color: var(--accent-warm);
+			}
+			.list p:not(.meta) {
+				margin: 0.35rem 0 0;
+				color: rgb(var(--gray-dark));
+			}
+			.meta {
+				color: rgb(var(--gray));
+				font-size: 0.95rem;
+				margin-top: 0.25rem;
+			}
+			@media (max-width: 720px) {
+				.hero {
+					padding: 1.75rem;
+				}
+				.hero h1 {
+					font-size: 2.4rem;
+				}
+				.section > h2 {
+					font-size: 1.8rem;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<Layout>
+			<main>
+				<section class="hero">
+					<h1>China Starter Guide</h1>
+					<p>
+						Clear, current guidance for first-time foreigners visiting China. Start with the essentials, then
+						follow the guides that match your trip.
+					</p>
+					<div class="card-grid">
+						{primaryCtas.map((cta) => (
+							<a class="card" href={withLang(cta.path)}>
+								<strong>{cta.title}</strong>
+								<p>{cta.description}</p>
+							</a>
+						))}
+					</div>
+				</section>
+
+				<div class="section">
+					<h2>Start with these 4 guides</h2>
+					<FeaturedEntryPoints />
+				</div>
+
+				<section class="section">
+					<h2>Top concerns</h2>
+					<ul class="list">
+						{topConcerns.map((guide) => (
+							<li>
+								<a href={withLang(guide.path)}>{guide.title}</a>
+								<p>{guide.description}</p>
+							</li>
+						))}
+					</ul>
+				</section>
+
+				<section class="section">
+					<h2>Recently updated</h2>
+					<ul class="list">
+						{recentGuides.map((guide) => {
+							const guidePath = `/${stripLangFromId(guide.id)}`;
+							return (
+								<li>
+									<a href={withLang(guidePath)}>{guide.data.title}</a>
+									<p>{guide.data.description}</p>
+									<p class="meta">
+										{formatCategory(guide.data.category)} · Last updated
+										<FormattedDate date={guide.data.lastUpdated} />
+									</p>
+								</li>
+							);
+						})}
+					</ul>
+				</section>
+			</main>
+		</Layout>
+	</body>
+</html>

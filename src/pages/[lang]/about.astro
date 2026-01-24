@@ -1,0 +1,13 @@
+---
+import { getCollection } from 'astro:content';
+import { getLangFromId, normalizeLangParam } from '../../utils/i18n';
+
+export async function getStaticPaths() {
+	const guides = await getCollection('guides');
+	const langs = Array.from(new Set(guides.map((guide) => getLangFromId(guide.id))));
+	return langs.map((lang) => ({ params: { lang } }));
+}
+
+const lang = normalizeLangParam(Astro.params.lang);
+return Astro.redirect('/about', 301);
+---

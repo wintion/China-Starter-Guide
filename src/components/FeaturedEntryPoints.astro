@@ -1,0 +1,144 @@
+---
+import { featuredGuides } from '../content/featured-guides';
+import { getLangFromPath, withOptionalLangPrefix } from '../utils/i18n';
+
+const guides = [...featuredGuides].sort((a, b) => a.priority - b.priority);
+const lang = getLangFromPath(Astro.url.pathname);
+const withLang = (path: string) => withOptionalLangPrefix(path, lang);
+
+const iconMap: Record<string, { viewBox: string; paths: string[] }> = {
+	start: {
+		viewBox: '0 0 24 24',
+		paths: ['M12 3l7 7-7 7-7-7 7-7z', 'M12 7v10'],
+	},
+	pay: {
+		viewBox: '0 0 24 24',
+		paths: ['M3 7h18v10H3z', 'M3 10h18', 'M7 15h4'],
+	},
+	safe: {
+		viewBox: '0 0 24 24',
+		paths: ['M12 3l7 3v6c0 5-3.5 9-7 10-3.5-1-7-5-7-10V6l7-3z', 'M9.5 12.5l1.8 1.8 3.2-3.2'],
+	},
+	airport: {
+		viewBox: '0 0 24 24',
+		paths: ['M2 12l9-2V4l2-1v7l9 2-9 2v7l-2-1v-6l-9-2z'],
+	},
+};
+
+const getIcon = (iconKey: string) => iconMap[iconKey] ?? iconMap.start;
+---
+
+<section class="featured" aria-label="Featured guides">
+	<ul class="grid">
+		{guides.map((guide) => {
+			const icon = getIcon(guide.iconKey);
+			return (
+				<li class="card">
+					<div class="icon" aria-hidden="true">
+						<svg viewBox={icon.viewBox} role="presentation" focusable="false">
+							{icon.paths.map((d) => (
+								<path d={d} />
+							))}
+						</svg>
+					</div>
+					<div class="content">
+						<h3>{guide.title}</h3>
+						<p>{guide.description}</p>
+						<a class="read-link" href={withLang(guide.href)} aria-label={`Read guide: ${guide.title}`}>
+							Read guide
+						</a>
+					</div>
+				</li>
+			);
+		})}
+	</ul>
+</section>
+
+<style>
+	.featured {
+		margin-top: 1rem;
+	}
+	.grid {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 1.25rem;
+		grid-template-columns: 1fr;
+	}
+	.card {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 1rem;
+		border: 1px solid rgb(var(--stroke));
+		border-radius: 18px;
+		padding: 1.25rem;
+		background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 249, 240, 0.96));
+		box-shadow: 0 10px 20px rgba(46, 34, 20, 0.08);
+		transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+	}
+	.card:hover {
+		transform: translateY(-2px);
+		border-color: rgba(47, 111, 85, 0.35);
+		box-shadow: var(--shadow-lift);
+	}
+	.card:focus-within {
+		border-color: var(--accent);
+		box-shadow: 0 0 0 3px rgba(47, 111, 85, 0.2);
+	}
+	.icon {
+		width: 40px;
+		height: 40px;
+		border-radius: 12px;
+		background: linear-gradient(140deg, rgba(47, 111, 85, 0.18), rgba(47, 111, 85, 0.05));
+		display: grid;
+		place-items: center;
+		color: var(--accent-dark);
+		box-shadow: inset 0 0 0 1px rgba(47, 111, 85, 0.18);
+	}
+	.icon svg {
+		width: 22px;
+		height: 22px;
+		stroke: currentColor;
+		stroke-width: 1.6;
+		fill: none;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+	.content h3 {
+		margin: 0;
+		font-size: 1.08rem;
+	}
+	.content p {
+		margin: 0.4rem 0 0.8rem;
+		color: rgb(var(--gray-dark));
+	}
+	.read-link {
+		color: var(--accent);
+		text-decoration: none;
+		font-weight: 600;
+	}
+	.read-link:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+		border-radius: 4px;
+	}
+	.read-link:hover {
+		color: var(--accent-warm);
+		text-decoration: underline;
+	}
+	@media (min-width: 900px) {
+		.grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+	@media (max-width: 520px) {
+		.card {
+			grid-template-columns: 1fr;
+		}
+		.icon {
+			width: 36px;
+			height: 36px;
+		}
+	}
+</style>

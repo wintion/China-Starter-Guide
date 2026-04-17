@@ -27,4 +27,11 @@ export const featuredGuides = [
 		iconKey: 'airport',
 		priority: 4,
 	},
+	{
+		title: 'Seeing a Doctor in China',
+		description: 'Choose the right care path fast: pharmacy, clinic, hospital, or emergency.',
+		href: '/guides/medical/see-a-doctor-in-china',
+		iconKey: 'medical',
+		priority: 5,
+	},
 ] as const;

@@ -49,6 +49,29 @@ const topConcerns = [
 		title: 'Visa-Free Entry Explained',
 		description: 'Understand eligibility, limits, and required documents.',
 	},
+	{
+		path: '/guides/medical/see-a-doctor-in-china',
+		title: 'Seeing a Doctor in China',
+		description: 'How to choose between pharmacies, hospitals, clinics, and emergency care.',
+	},
+];
+
+const medicalBasics = [
+	{
+		path: '/guides/medical/see-a-doctor-in-china',
+		title: 'Seeing a Doctor in China',
+		description: 'Start with the right care path: pharmacy, clinic, hospital, or emergency.',
+	},
+	{
+		path: '/guides/medical/public-hospitals-vs-private-clinics',
+		title: 'Public Hospitals vs Private Clinics',
+		description: 'Know when to choose lower cost and breadth, and when to pay for convenience.',
+	},
+	{
+		path: '/guides/medical/emergency-care-in-china',
+		title: 'Emergency Care in China',
+		description: 'What to do fast when a problem becomes urgent and the trip cannot wait.',
+	},
 ];
 
 const primaryCtas = [
@@ -66,6 +89,11 @@ const primaryCtas = [
 		path: '/category/transport',
 		title: 'Get around fast',
 		description: 'Trains, metros, and local travel basics.',
+	},
+	{
+		path: '/category/medical',
+		title: 'Use medical care well',
+		description: 'Clinics, hospitals, emergencies, and costs.',
 	},
 ];
 
@@ -160,6 +188,11 @@ const withLang = (path: string) => withOptionalLangPrefix(path, lang);
 				margin: 0.4rem 0 0;
 				color: rgb(var(--gray-dark));
 			}
+			.section-intro {
+				max-width: 720px;
+				margin: 0 0 1.25rem;
+				color: rgb(var(--gray-dark));
+			}
 			.list {
 				list-style: none;
 				margin: 0;
@@ -230,7 +263,7 @@ const withLang = (path: string) => withOptionalLangPrefix(path, lang);
 				</section>
 
 				<div class="section">
-					<h2>Start with these 4 guides</h2>
+					<h2>Start with these 5 guides</h2>
 					<FeaturedEntryPoints />
 				</div>
 
@@ -244,6 +277,22 @@ const withLang = (path: string) => withOptionalLangPrefix(path, lang);
 							</li>
 						))}
 					</ul>
+				</section>
+
+				<section class="section">
+					<h2>Medical basics for first-time visitors</h2>
+					<p class="section-intro">
+						Use these guides if you want a practical overview of clinics, hospitals, costs, and urgent care
+						before you need them.
+					</p>
+					<div class="card-grid">
+						{medicalBasics.map((guide) => (
+							<a class="card" href={withLang(guide.path)}>
+								<strong>{guide.title}</strong>
+								<p>{guide.description}</p>
+							</a>
+						))}
+					</div>
 				</section>
 
 				<section class="section">

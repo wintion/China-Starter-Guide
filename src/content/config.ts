@@ -6,7 +6,7 @@ const guides = defineCollection({
 	schema: z.object({
 		title: z.string(),
 		description: z.string(),
-		category: z.enum(['prepare', 'payment', 'transport', 'life', 'cities', 'tips']),
+		category: z.enum(['prepare', 'payment', 'transport', 'life', 'medical', 'cities', 'tips']),
 		questions: z.array(z.string()),
 		lastUpdated: z.coerce.date(),
 		tags: z.array(z.string()).optional(),

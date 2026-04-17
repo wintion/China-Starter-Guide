@@ -23,6 +23,10 @@ const iconMap: Record<string, { viewBox: string; paths: string[] }> = {
 		viewBox: '0 0 24 24',
 		paths: ['M2 12l9-2V4l2-1v7l9 2-9 2v7l-2-1v-6l-9-2z'],
 	},
+	medical: {
+		viewBox: '0 0 24 24',
+		paths: ['M12 4v16', 'M4 12h16', 'M7 7l10 10', 'M17 7L7 17'],
+	},
 };
 
 const getIcon = (iconKey: string) => iconMap[iconKey] ?? iconMap.start;

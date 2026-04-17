@@ -22,6 +22,7 @@
 - payment
 - transport
 - life
+- medical
 - cities
 - tips
 

@@ -110,7 +110,7 @@
   {
     "id": "q19",
     "question": "What should I know about health coverage before arriving in China?",
-    "category": "prepare",
+    "category": "medical",
     "priority": 2
   },
   {
@@ -272,7 +272,7 @@
   {
     "id": "q46",
     "question": "What should I know about medical clinics for daily life in China?",
-    "category": "life",
+    "category": "medical",
     "priority": 5
   },
   {
@@ -308,7 +308,7 @@
   {
     "id": "q52",
     "question": "What should I know about pharmacies for daily life in China?",
-    "category": "life",
+    "category": "medical",
     "priority": 4
   },
   {
@@ -598,5 +598,77 @@
     "question": "What should I know about sim card refills for daily life in China?",
     "category": "life",
     "priority": 1
+  },
+  {
+    "id": "q101",
+    "question": "How should foreigners see a doctor in China?",
+    "category": "medical",
+    "priority": 1
+  },
+  {
+    "id": "q102",
+    "question": "What is the difference between public hospitals and private clinics in China?",
+    "category": "medical",
+    "priority": 1
+  },
+  {
+    "id": "q103",
+    "question": "What should I do during a medical emergency in China?",
+    "category": "medical",
+    "priority": 1
+  },
+  {
+    "id": "medical-costs",
+    "question": "How expensive is medical care in China for foreign visitors?",
+    "category": "medical",
+    "priority": 2
+  },
+  {
+    "id": "medical-insurance",
+    "question": "Do foreign visitors need health insurance in China?",
+    "category": "medical",
+    "priority": 2
+  },
+  {
+    "id": "medical-pharmacy",
+    "question": "How do pharmacies work in China for foreign visitors?",
+    "category": "medical",
+    "priority": 2
+  },
+  {
+    "id": "medical-booking",
+    "question": "How do hospital appointments work in China for foreign visitors?",
+    "category": "medical",
+    "priority": 2
+  },
+  {
+    "id": "medical-international",
+    "question": "What are international departments in Chinese hospitals and when should foreigners use them?",
+    "category": "medical",
+    "priority": 2
+  },
+  {
+    "id": "medical-bring-vs-buy",
+    "question": "Should foreign visitors bring medicines to China or buy them locally?",
+    "category": "medical",
+    "priority": 2
+  },
+  {
+    "id": "medical-hospital-choice",
+    "question": "How should foreign visitors choose a hospital in China?",
+    "category": "medical",
+    "priority": 2
+  },
+  {
+    "id": "medical-refill",
+    "question": "How do prescription refills work in China for foreign visitors?",
+    "category": "medical",
+    "priority": 2
+  },
+  {
+    "id": "medical-short-trip",
+    "question": "What should I do if I get sick during a short trip in China?",
+    "category": "medical",
+    "priority": 2
   }
 ]

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="587" viewBox="0 0 1760 587" role="img" aria-label="China Starter Guide">
+<svg xmlns="http://www.w3.org/2000/svg" width="2100" height="587" viewBox="0 0 2100 587" role="img" aria-label="China Starter Guide">
   <defs>
     <style>
       .logo-title {
@@ -11,7 +11,7 @@
       .logo-tagline {
         font-family: "Atkinson", "Helvetica Neue", Arial, sans-serif;
         font-weight: 700;
-        font-size: 44px;
+        font-size: 60px;
         fill: #87a871;
       }
     </style>
@@ -260,5 +260,5 @@
     <path d="" fill="#FCFEFA" transform="translate(0,0)"/>
   </svg>
   <text class="logo-title" style="font-size: 100px; white-space: pre;" x="569.399" y="210.727">China Starter Guide</text>
-  <text class="logo-tagline" style="font-size: 46px; white-space: pre;" x="585" y="352">A Practical Guide for First-Time Visitors to China.</text>
+  <text class="logo-tagline" style="font-size: 60px; white-space: pre;" x="585" y="352">A Practical Guide for First-Time Visitors to China.</text>
 </svg>

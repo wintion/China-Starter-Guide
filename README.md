@@ -30,9 +30,9 @@ This site is provided for general information only. It is not legal, policy, or 
 
 ## Contributing / feedback
 
-If you find an issue or want to suggest an update, please open a GitHub Issue:
+If you find an issue or want to suggest an update, please email:
 
-- https://github.com/wintion/China-Starter-Guide/issues/new
+- contact@chinastarterguide.com
 
 ## Development
 

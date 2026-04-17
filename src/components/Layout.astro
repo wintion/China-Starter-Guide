@@ -54,7 +54,11 @@ const isActive = (href: string) => {
 				</svg>
 				Life
 			</a>
-			<a href={withLang('/category/medical')} aria-current={isActive('/category/medical') ? 'page' : undefined}>
+			<a
+				class="nav-link-medical"
+				href={withLang('/category/medical')}
+				aria-current={isActive('/category/medical') ? 'page' : undefined}
+			>
 				<svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
 					<path d="M12 4v16" />
 					<path d="M4 12h16" />
@@ -62,6 +66,7 @@ const isActive = (href: string) => {
 					<path d="M18 6L6 18" />
 				</svg>
 				Medical
+				<span class="nav-badge" aria-hidden="true">NEW</span>
 			</a>
 			<a href={withLang('/category/cities')} aria-current={isActive('/category/cities') ? 'page' : undefined}>
 				<svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -138,8 +143,9 @@ const isActive = (href: string) => {
 		flex: 0 0 100%;
 	}
 	.site-logo {
-		width: 400px;
-		height: auto;
+		width: auto;
+		height: 150px;
+		max-width: 100%;
 		filter: drop-shadow(0 6px 12px rgba(46, 34, 20, 0.12));
 	}
 	.site-nav {
@@ -165,6 +171,30 @@ const isActive = (href: string) => {
 		gap: 0.45rem;
 		line-height: 1;
 		white-space: nowrap;
+	}
+	.nav-link-medical {
+		position: relative;
+		overflow: visible;
+	}
+	.nav-badge {
+		position: absolute;
+		top: -0.62rem;
+		right: -0.28rem;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 2rem;
+		padding: 0.18rem 0.38rem;
+		border-radius: 999px;
+		background: linear-gradient(180deg, #e4553f, #c6402b);
+		color: #fffaf4;
+		font-size: 0.6rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		line-height: 1;
+		box-shadow: 0 4px 10px rgba(198, 64, 43, 0.28);
+		border: 1px solid rgba(255, 250, 244, 0.8);
+		pointer-events: none;
 	}
 	.nav-icon {
 		width: 16px;
@@ -235,7 +265,9 @@ const isActive = (href: string) => {
 			justify-content: flex-start;
 		}
 		.site-logo {
-			width: min(90vw, 380px);
+			width: min(92vw, 640px);
+			height: auto;
+			max-height: 150px;
 		}
 	}
 </style>

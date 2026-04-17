@@ -356,19 +356,6 @@ const withLang = (path: string) => withOptionalLangPrefix(path, lang);
 				color: rgb(var(--gray));
 				font-size: 0.95rem;
 			}
-			.category-kicker {
-				display: inline-flex;
-				align-items: center;
-				padding: 0.3rem 0.7rem;
-				border-radius: 999px;
-				background: rgba(47, 111, 85, 0.14);
-				color: var(--accent-dark);
-				font-size: 0.82rem;
-				font-weight: 700;
-				letter-spacing: 0.04em;
-				text-transform: uppercase;
-				margin-bottom: 0.85rem;
-			}
 			.category-support {
 				max-width: 720px;
 				margin: 0.85rem 0 0;
@@ -536,7 +523,6 @@ const withLang = (path: string) => withOptionalLangPrefix(path, lang);
 				display: block;
 				font-size: 1.18rem;
 				line-height: 1.2;
-				max-width: 14ch;
 				color: rgb(var(--black));
 			}
 			.quick-path-card p {
@@ -706,7 +692,6 @@ const withLang = (path: string) => withOptionalLangPrefix(path, lang);
 		<Layout>
 			<main>
 				<header class="category-header" data-category={category}>
-					{category === 'medical' && <p class="category-kicker">Medical basics for visitors</p>}
 					<h1>{label} guides</h1>
 					<p>{introCopy}</p>
 					{supportCopy && <p class="category-support">{supportCopy}</p>}

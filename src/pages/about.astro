@@ -9,7 +9,7 @@ const allGuides = await getCollection('guides');
 const availableLangs = Array.from(new Set(allGuides.map((guide) => getLangFromId(guide.id))));
 const alternates = buildAlternates(Astro.url.pathname, Astro.site ?? Astro.url, availableLangs, lang);
 const withLang = (path: string) => withOptionalLangPrefix(path, lang);
-const issueUrl = 'https://github.com/wintion/China-Starter-Guide/issues/new';
+const contactUrl = 'mailto:contact@chinastarterguide.com';
 ---
 
 <!doctype html>
@@ -168,7 +168,7 @@ const issueUrl = 'https://github.com/wintion/China-Starter-Guide/issues/new';
 						<ul>
 							<li>Free to use</li>
 							<li>Hosted on GitHub</li>
-							<li>Issues are welcome for feedback or corrections</li>
+							<li>Email is open for feedback or corrections</li>
 						</ul>
 					</article>
 					<article class="panel">
@@ -193,16 +193,16 @@ const issueUrl = 'https://github.com/wintion/China-Starter-Guide/issues/new';
 						for their own actions.
 					</p>
 					<p>
-						If you spot an issue or want to contribute, please open a GitHub Issue.
+						If you have feedback, corrections, or collaboration ideas, email contact@chinastarterguide.com.
 					</p>
 				</section>
 
 				<section class="cta">
 					<div>
-						<strong>Found something wrong?</strong>
-						<span>Open an Issue and we will review and update it.</span>
+						<strong>Contact me</strong>
+						<span>Email contact@chinastarterguide.com for questions, feedback, or collaboration.</span>
 					</div>
-					<a href={issueUrl} target="_blank" rel="noreferrer">Open an Issue</a>
+					<a href={contactUrl}>Contact me</a>
 				</section>
 			</main>
 		</Layout>

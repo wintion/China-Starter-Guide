@@ -4,6 +4,7 @@
 - A fast, SEO-friendly static guide site for first-time foreigners visiting China.
 - Content-first: no auth, no database, no external services in MVP.
 - Strictly structured content to enable category pages, FAQs, related guides.
+- The default language for the entire site is English.
 
 ## Tech Stack
 - Astro (static output)
@@ -67,6 +68,7 @@ Sorting:
 - Mobile friendly
 - No popups
 - Internal search is optional for MVP (can be added after core pages)
+- Default all UI copy, navigation labels, and page content to English unless a specific localization task says otherwise
 
 ## Non-Goals (MVP)
 - No user accounts

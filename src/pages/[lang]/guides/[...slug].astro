@@ -11,6 +11,7 @@ import {
 	stripLangFromId,
 	withOptionalLangPrefix,
 } from '../../../utils/i18n';
+import { getGuidePageCopy } from '../../../utils/localized-copy';
 
 type Props = {
 	guide: CollectionEntry<'guides'>;
@@ -57,10 +58,12 @@ const alternates = allGuides
 		};
 	});
 const withLang = (path: string) => withOptionalLangPrefix(path, lang);
+const guidePageCopy = getGuidePageCopy(lang);
+const dir = lang === 'ar' ? 'rtl' : 'ltr';
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={lang} dir={dir}>
 	<head>
 		<BaseHead
 			title={guide.data.title}
@@ -200,13 +203,13 @@ const withLang = (path: string) => withOptionalLangPrefix(path, lang);
 					<h1>{guide.data.title}</h1>
 					<p>{guide.data.description}</p>
 					<p class="guide-meta">
-						Last updated <FormattedDate date={guide.data.lastUpdated} />
+						{guidePageCopy.lastUpdated} <FormattedDate date={guide.data.lastUpdated} />
 					</p>
 				</header>
 				<section class="guide-body">
 					{headings.length > 0 && (
 						<aside class="toc">
-							<h2>On this page</h2>
+							<h2>{guidePageCopy.onThisPage}</h2>
 							<ol>
 								{headings.map((heading) => (
 									<li>
@@ -222,7 +225,7 @@ const withLang = (path: string) => withOptionalLangPrefix(path, lang);
 				</section>
 				{relatedGuides.length > 0 && (
 					<section class="related">
-						<h2>Related guides</h2>
+						<h2>{guidePageCopy.relatedGuides}</h2>
 						<ul>
 							{relatedGuides.map((entry) => (
 								<li>

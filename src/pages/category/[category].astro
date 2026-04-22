@@ -10,6 +10,7 @@ import {
 	stripLangFromId,
 	withOptionalLangPrefix,
 } from '../../utils/i18n';
+import { getCategoryLabel, getCategoryPageCopy, type CategorySlug } from '../../utils/localized-copy';
 
 export const categories = ['prepare', 'payment', 'transport', 'life', 'medical', 'cities', 'tips'] as const;
 
@@ -48,6 +49,8 @@ type CategoryConfig = {
 	intro: string;
 	support?: string;
 	featuredIds?: string[];
+	featuredHeading?: string;
+	allHeading?: string;
 	quickPaths?: { title: string; description: string; id: string }[];
 	topicGroups?: { title: string; ids: string[] }[];
 };
@@ -213,7 +216,11 @@ const categoryConfig: Record<string, CategoryConfig> = {
 	},
 };
 
-const config = categoryConfig[category] ?? {
+const localizedCategoryCopy = getCategoryPageCopy(lang, category as CategorySlug);
+const config = {
+	...categoryConfig[category],
+	...localizedCategoryCopy,
+} ?? {
 	intro: 'Focused, practical guidance for first-time visitors.',
 };
 
@@ -274,12 +281,12 @@ const topics = config.topicGroups
 			.filter((topic) => topic.entries.length > 0)
 	: tagTopics;
 
-const label = `${category.charAt(0).toUpperCase()}${category.slice(1)}`;
-const lowerLabel = label.toLowerCase();
+const label = getCategoryLabel(category as CategorySlug, lang);
 const introCopy = config.intro;
 const supportCopy = config.support;
-const featuredHeading = category === 'tips' ? 'Featured tips' : `Featured ${lowerLabel} guides`;
-const allHeading = category === 'tips' ? 'All tips' : `All ${lowerLabel} guides`;
+const featuredHeading =
+	config.featuredHeading ?? (category === 'tips' ? 'Featured tips' : `Featured ${label.toLowerCase()} guides`);
+const allHeading = config.allHeading ?? (category === 'tips' ? 'All tips' : `All ${label.toLowerCase()} guides`);
 const withLang = (path: string) => withOptionalLangPrefix(path, lang);
 ---
 
@@ -287,8 +294,8 @@ const withLang = (path: string) => withOptionalLangPrefix(path, lang);
 <html lang={lang}>
 	<head>
 		<BaseHead
-			title={`${label} guides | China Starter Guide`}
-			description={`Practical ${label.toLowerCase()} guides for first-time visitors to China.`}
+			title={allHeading}
+			description={introCopy}
 			lang={lang}
 			alternates={alternates}
 		/>

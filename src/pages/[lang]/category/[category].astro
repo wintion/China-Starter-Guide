@@ -11,6 +11,13 @@ import {
 	stripLangFromId,
 	withOptionalLangPrefix,
 } from '../../../utils/i18n';
+import {
+	getCategoryLabel,
+	getCategoryPageCopy,
+	getCategoryUiCopy,
+	getUiLang,
+	type CategorySlug,
+} from '../../../utils/localized-copy';
 
 export const categories = ['prepare', 'payment', 'transport', 'life', 'medical', 'cities', 'tips'] as const;
 
@@ -57,16 +64,22 @@ const guides = allGuides
 	.sort((a, b) => b.data.lastUpdated.valueOf() - a.data.lastUpdated.valueOf());
 
 type CategoryConfig = {
-	intro: string;
+	intro?: string;
 	support?: string;
 	featuredIds?: string[];
-	quickPaths?: { title: string; description: string; id: string }[];
-	topicGroups?: { title: string; ids: string[] }[];
+	featuredHeading?: string;
+	allHeading?: string;
+	quickPaths?: readonly { title: string; description: string; id: string }[];
+	topicGroups?: readonly { title: string; ids: readonly string[] }[];
 };
+
+type QuickPathConfig = NonNullable<CategoryConfig['quickPaths']>[number];
+type TopicGroupConfig = NonNullable<CategoryConfig['topicGroups']>[number];
+type QuickPathEntry = QuickPathConfig & { entry: CollectionEntry<'guides'> };
+type TopicSection = { title: string; entries: CollectionEntry<'guides'>[] };
 
 const categoryConfig: Record<string, CategoryConfig> = {
 	prepare: {
-		intro: 'Visa, entry, safety, and pre-trip essentials to get you ready.',
 		featuredIds: [
 			'prepare/is-china-safe',
 			'prepare/visa-free-explained',
@@ -77,7 +90,6 @@ const categoryConfig: Record<string, CategoryConfig> = {
 		],
 	},
 	payment: {
-		intro: 'Mobile wallets, cards, cash, and QR payments that actually work.',
 		featuredIds: [
 			'payment/how-to-pay-in-china',
 			'payment/qr-code-payment-basics',
@@ -88,7 +100,6 @@ const categoryConfig: Record<string, CategoryConfig> = {
 		],
 	},
 	transport: {
-		intro: 'Trains, metros, flights, and airport transfers with clear steps.',
 		featuredIds: [
 			'transport/airport-to-city',
 			'transport/metro-basics',
@@ -99,7 +110,6 @@ const categoryConfig: Record<string, CategoryConfig> = {
 		],
 	},
 	life: {
-		intro: 'Everyday living basics: SIMs, hotels, food, apps, and connectivity.',
 		featuredIds: [
 			'life/sim-card-vs-esim',
 			'life/buying-sim-at-airport',
@@ -110,9 +120,6 @@ const categoryConfig: Record<string, CategoryConfig> = {
 		],
 	},
 	medical: {
-		intro: 'How foreigners can use clinics, hospitals, pharmacies, and emergency care in China with less stress.',
-		support:
-			'Start here if you want clear, practical help choosing the right medical path in China before a small problem turns into a confusing one.',
 		featuredIds: [
 			'medical/see-a-doctor-in-china',
 			'medical/public-hospitals-vs-private-clinics',
@@ -121,56 +128,8 @@ const categoryConfig: Record<string, CategoryConfig> = {
 			'medical/how-pharmacies-work-in-china',
 			'medical/health-insurance-for-foreign-visitors',
 		],
-		quickPaths: [
-			{
-				title: 'I need care now',
-				description: 'Choose between pharmacy, clinic, hospital, or emergency care quickly.',
-				id: 'medical/see-a-doctor-in-china',
-			},
-			{
-				title: 'I need the right hospital',
-				description: 'Decide between public hospitals, private clinics, and international departments.',
-				id: 'medical/choosing-a-hospital-in-china',
-			},
-			{
-				title: 'I need urgent help',
-				description: 'Use this path when symptoms are escalating and the trip cannot wait.',
-				id: 'medical/emergency-care-in-china',
-			},
-		],
-		topicGroups: [
-			{
-				title: 'Start here',
-				ids: ['medical/see-a-doctor-in-china', 'medical/public-hospitals-vs-private-clinics'],
-			},
-			{
-				title: 'Appointments and access',
-				ids: [
-					'medical/booking-hospital-appointments-in-china',
-					'medical/choosing-a-hospital-in-china',
-					'medical/international-departments-in-chinese-hospitals',
-				],
-			},
-			{
-				title: 'Costs and coverage',
-				ids: ['medical/medical-costs-in-china', 'medical/health-insurance-for-foreign-visitors'],
-			},
-			{
-				title: 'Pharmacy and medicines',
-				ids: [
-					'medical/how-pharmacies-work-in-china',
-					'medical/prescription-refills-in-china',
-					'medical/bringing-medicines-vs-buying-locally',
-				],
-			},
-			{
-				title: 'Urgent help',
-				ids: ['medical/emergency-care-in-china', 'medical/getting-sick-on-a-short-trip-in-china'],
-			},
-		],
 	},
 	cities: {
-		intro: 'Choose the right cities, routes, and seasons for a first trip.',
 		featuredIds: [
 			'cities/best-cities-first-time',
 			'cities/how-much-time-in-china',
@@ -181,7 +140,6 @@ const categoryConfig: Record<string, CategoryConfig> = {
 		],
 	},
 	tips: {
-		intro: 'Short, practical tips that reduce friction: etiquette, safety, communication, and daily habits.',
 		featuredIds: [
 			'tips/common-mistakes-first-timers',
 			'tips/cultural-do-and-dont',
@@ -190,53 +148,26 @@ const categoryConfig: Record<string, CategoryConfig> = {
 			'tips/dealing-with-crowds',
 			'tips/traveling-at-night',
 		],
-		topicGroups: [
-			{
-				title: 'Etiquette and social norms',
-				ids: [
-					'tips/greetings-and-social-norms',
-					'tips/compliments-and-politeness',
-					'tips/gestures-to-avoid',
-					'tips/public-affection',
-					'tips/cultural-do-and-dont',
-				],
-			},
-			{
-				title: 'Communication and understanding',
-				ids: [
-					'tips/handling-misunderstandings',
-					'tips/staying-connected-without-english',
-					'tips/taking-photos-privacy',
-				],
-			},
-			{
-				title: 'Safety and awareness',
-				ids: ['tips/dealing-with-crowds', 'tips/traveling-at-night', 'tips/safety-with-electronics'],
-			},
-			{
-				title: 'Families and seniors',
-				ids: ['tips/family-travel-tips', 'tips/seniors-travel-tips'],
-			},
-			{
-				title: 'Shopping and bargaining',
-				ids: ['tips/bargaining-basics'],
-			},
-		],
 	},
 };
 
-const config = categoryConfig[category] ?? {
-	intro: 'Focused, practical guidance for first-time visitors.',
+const localizedCategoryCopy = getCategoryPageCopy(lang, category as CategorySlug);
+const categoryUiCopy = getCategoryUiCopy(lang);
+const config = {
+	...categoryConfig[category],
+	...localizedCategoryCopy,
 };
 
 const guideById = new Map(
 	guides.map((guide) => [stripLangFromId(guide.id).replace(/^guides\//, ''), guide]),
 );
-const pickGuides = (ids: string[]) =>
+const pickGuides = (ids: readonly string[]) =>
 	ids.map((id) => guideById.get(id)).filter((entry): entry is CollectionEntry<'guides'> => Boolean(entry));
 const quickPaths = (config.quickPaths ?? [])
-	.map((item) => ({ ...item, entry: guideById.get(item.id) }))
-	.filter((item): item is typeof item & { entry: CollectionEntry<'guides'> } => Boolean(item.entry));
+	.map((item: QuickPathConfig) => ({ ...item, entry: guideById.get(item.id) }))
+	.filter((item: QuickPathConfig & { entry: CollectionEntry<'guides'> | undefined }): item is QuickPathEntry =>
+		Boolean(item.entry),
+	);
 const featuredGuides = config.featuredIds ? pickGuides(config.featuredIds) : guides.slice(0, 6);
 
 const tagLabelOverrides: Record<string, string> = {
@@ -280,27 +211,34 @@ const tagTopics = (() => {
 	}));
 })();
 
+const resolvedUiLang = getUiLang(lang);
 const topics = config.topicGroups
 	? config.topicGroups
-			.map((topic) => ({ title: topic.title, entries: pickGuides(topic.ids) }))
-			.filter((topic) => topic.entries.length > 0)
-	: tagTopics;
+			.map((topic: TopicGroupConfig): TopicSection => ({
+				title: topic.title,
+				entries: pickGuides(topic.ids),
+			}))
+			.filter((topic: TopicSection) => topic.entries.length > 0)
+	: resolvedUiLang === 'en'
+		? tagTopics
+		: [];
 
-const label = `${category.charAt(0).toUpperCase()}${category.slice(1)}`;
-const lowerLabel = label.toLowerCase();
-const introCopy = config.intro;
+const label = getCategoryLabel(category as CategorySlug, lang);
+const introCopy = config.intro ?? 'Focused, practical guidance for first-time visitors.';
 const supportCopy = config.support;
-const featuredHeading = category === 'tips' ? 'Featured tips' : `Featured ${lowerLabel} guides`;
-const allHeading = category === 'tips' ? 'All tips' : `All ${lowerLabel} guides`;
+const featuredHeading =
+	config.featuredHeading ?? (category === 'tips' ? 'Featured tips' : `Featured ${label} guides`);
+const allHeading = config.allHeading ?? (category === 'tips' ? 'All tips' : `All ${label} guides`);
 const withLang = (path: string) => withOptionalLangPrefix(path, lang);
+const dir = lang === 'ar' ? 'rtl' : 'ltr';
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={lang} dir={dir}>
 	<head>
 		<BaseHead
-			title={`${label} guides | China Starter Guide`}
-			description={`Practical ${label.toLowerCase()} guides for first-time visitors to China.`}
+			title={allHeading}
+			description={introCopy}
 			lang={lang}
 			alternates={alternates}
 		/>
@@ -692,21 +630,25 @@ const withLang = (path: string) => withOptionalLangPrefix(path, lang);
 		<Layout>
 			<main>
 				<header class="category-header" data-category={category}>
-					<h1>{label} guides</h1>
+					<h1>{allHeading}</h1>
 					<p>{introCopy}</p>
 					{supportCopy && <p class="category-support">{supportCopy}</p>}
-					{guides.length > 0 && <p class="category-count">{guides.length} guides available</p>}
+					{guides.length > 0 && (
+						<p class="category-count">
+							{categoryUiCopy.guidesAvailableTemplate.replace('{count}', String(guides.length))}
+						</p>
+					)}
 				</header>
 				{quickPaths.length > 0 && (
 					<section class="category-section" aria-labelledby="quick-paths">
-						<h2 id="quick-paths">Quick paths</h2>
+						<h2 id="quick-paths">{categoryUiCopy.quickPaths}</h2>
 						<div class="quick-path-grid">
-								{quickPaths.map((item) => (
+								{quickPaths.map((item: QuickPathEntry) => (
 									<a class="quick-path-card" href={withLang(`/${stripLangFromId(item.entry.id)}`)}>
 										<span class="quick-path-label">{item.title}</span>
 										<strong>{item.entry.data.title}</strong>
 										<p>{item.description}</p>
-										<span class="quick-path-action">Open guide</span>
+										<span class="quick-path-action">{categoryUiCopy.openGuide}</span>
 									</a>
 								))}
 						</div>
@@ -722,10 +664,14 @@ const withLang = (path: string) => withOptionalLangPrefix(path, lang);
 											data-category={category}
 											href={withLang(`/${stripLangFromId(guide.id)}`)}
 										>
-											{category === 'medical' && <span class="featured-card-eyebrow">Featured</span>}
+											{category === 'medical' && (
+												<span class="featured-card-eyebrow">{categoryUiCopy.featuredEyebrow}</span>
+											)}
 											<strong>{guide.data.title}</strong>
 											<p>{guide.data.description}</p>
-											{category === 'medical' && <span class="featured-card-action">Read guide</span>}
+											{category === 'medical' && (
+												<span class="featured-card-action">{categoryUiCopy.readGuide}</span>
+											)}
 										</a>
 								))}
 						</div>
@@ -733,15 +679,12 @@ const withLang = (path: string) => withOptionalLangPrefix(path, lang);
 				)}
 				{topics.length > 0 && (
 					<section class="category-section" aria-labelledby="browse-by-topic">
-						<h2 id="browse-by-topic">Browse by topic</h2>
+						<h2 id="browse-by-topic">{categoryUiCopy.browseByTopic}</h2>
 						{category === 'medical' && (
-							<p class="topic-intro">
-								Start with the question you are trying to solve right now, then move into the detailed
-								guide that matches your situation.
-							</p>
+							<p class="topic-intro">{categoryUiCopy.medicalTopicIntro}</p>
 						)}
 						<div class="topic-grid" data-category={category}>
-							{topics.map((topic) => {
+							{topics.map((topic: TopicSection) => {
 								if (topic.entries.length === 0) return null;
 									return (
 										<div class="topic-card">
@@ -749,7 +692,7 @@ const withLang = (path: string) => withOptionalLangPrefix(path, lang);
 												<h3>{topic.title}</h3>
 											</div>
 											<ul>
-											{topic.entries.map((entry) => (
+											{topic.entries.map((entry: CollectionEntry<'guides'>) => (
 												<li>
 													<a href={withLang(`/${stripLangFromId(entry.id)}`)}>
 														{entry.data.title}
@@ -772,14 +715,14 @@ const withLang = (path: string) => withOptionalLangPrefix(path, lang);
 									<a href={withLang(`/${stripLangFromId(guide.id)}`)}>{guide.data.title}</a>
 									<p>{guide.data.description}</p>
 									<p class="category-meta">
-										Last updated <FormattedDate date={guide.data.lastUpdated} />
+										{categoryUiCopy.lastUpdated} <FormattedDate date={guide.data.lastUpdated} />
 									</p>
 								</li>
 							))}
 						</ul>
 					</>
 				) : (
-					<p>No guides are available in this category yet.</p>
+					<p>{categoryUiCopy.noGuides}</p>
 				)}
 			</main>
 		</Layout>

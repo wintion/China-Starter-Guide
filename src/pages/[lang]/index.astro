@@ -12,6 +12,31 @@ import {
 	stripLangFromId,
 	withOptionalLangPrefix,
 } from '../../utils/i18n';
+import { getCategoryLabel, getHomeCopy, type CategorySlug } from '../../utils/localized-copy';
+
+type LinkCard = {
+	path: string;
+	title: string;
+	description: string;
+};
+
+type HomeCopy = {
+	metaTitle: string;
+	metaDescription: string;
+	heroTitle: string;
+	heroDescription: string;
+	primaryCtas: readonly LinkCard[];
+	sections: {
+		featured: string;
+		topConcerns: string;
+		medicalBasics: string;
+		medicalIntro: string;
+		recent: string;
+		lastUpdated: string;
+	};
+	topConcernIds: readonly string[];
+	medicalBasicIds: readonly string[];
+};
 
 export async function getStaticPaths() {
 	const guides = await getCollection('guides');
@@ -32,81 +57,27 @@ const guides = allGuides
 	.sort((a, b) => b.data.lastUpdated.valueOf() - a.data.lastUpdated.valueOf());
 
 const recentGuides = guides.slice(0, 6);
-
-const topConcerns = [
-	{
-		path: '/guides/payment/how-to-pay-in-china',
-		title: 'How to Pay in China',
-		description: 'Cash, cards, and mobile wallets you can use on day one.',
-	},
-	{
-		path: '/guides/transport/high-speed-rail-basics',
-		title: 'High-Speed Rail Basics',
-		description: 'Booking, boarding, and picking the right seat class.',
-	},
-	{
-		path: '/guides/prepare/visa-free-explained',
-		title: 'Visa-Free Entry Explained',
-		description: 'Understand eligibility, limits, and required documents.',
-	},
-	{
-		path: '/guides/medical/see-a-doctor-in-china',
-		title: 'Seeing a Doctor in China',
-		description: 'How to choose between pharmacies, hospitals, clinics, and emergency care.',
-	},
-];
-
-const medicalBasics = [
-	{
-		path: '/guides/medical/see-a-doctor-in-china',
-		title: 'Seeing a Doctor in China',
-		description: 'Start with the right care path: pharmacy, clinic, hospital, or emergency.',
-	},
-	{
-		path: '/guides/medical/public-hospitals-vs-private-clinics',
-		title: 'Public Hospitals vs Private Clinics',
-		description: 'Know when to choose lower cost and breadth, and when to pay for convenience.',
-	},
-	{
-		path: '/guides/medical/emergency-care-in-china',
-		title: 'Emergency Care in China',
-		description: 'What to do fast when a problem becomes urgent and the trip cannot wait.',
-	},
-];
-
-const primaryCtas = [
-	{
-		path: '/category/prepare',
-		title: 'Prepare before arrival',
-		description: 'Visas, documents, and essential setup.',
-	},
-	{
-		path: '/category/payment',
-		title: 'Pay smoothly',
-		description: 'Wallets, cards, and cash expectations.',
-	},
-	{
-		path: '/category/transport',
-		title: 'Get around fast',
-		description: 'Trains, metros, and local travel basics.',
-	},
-	{
-		path: '/category/medical',
-		title: 'Use medical care well',
-		description: 'Clinics, hospitals, emergencies, and costs.',
-	},
-];
-
-const formatCategory = (value: string) => `${value.charAt(0).toUpperCase()}${value.slice(1)}`;
+const homeCopy = getHomeCopy(lang) as unknown as HomeCopy;
+const guideById = new Map(
+	guides.map((guide) => [stripLangFromId(guide.id).replace(/^guides\//, ''), guide]),
+);
+const topConcerns = homeCopy.topConcernIds
+	.map((id) => guideById.get(id))
+	.filter((guide): guide is (typeof guides)[number] => Boolean(guide));
+const medicalBasics = homeCopy.medicalBasicIds
+	.map((id) => guideById.get(id))
+	.filter((guide): guide is (typeof guides)[number] => Boolean(guide));
+const formatCategory = (value: string) => getCategoryLabel(value as CategorySlug, lang);
 const withLang = (path: string) => withOptionalLangPrefix(path, lang);
+const dir = lang === 'ar' ? 'rtl' : 'ltr';
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={lang} dir={dir}>
 	<head>
 		<BaseHead
-			title="China Starter Guide"
-			description="Practical, content-first guidance for first-time foreigners visiting China."
+			title={homeCopy.metaTitle}
+			description={homeCopy.metaDescription}
 			lang={lang}
 			alternates={alternates}
 		/>
@@ -247,13 +218,10 @@ const withLang = (path: string) => withOptionalLangPrefix(path, lang);
 		<Layout>
 			<main>
 				<section class="hero">
-					<h1>China Starter Guide</h1>
-					<p>
-						Clear, current guidance for first-time foreigners visiting China. Start with the essentials, then
-						follow the guides that match your trip.
-					</p>
+					<h1>{homeCopy.heroTitle}</h1>
+					<p>{homeCopy.heroDescription}</p>
 					<div class="card-grid">
-						{primaryCtas.map((cta) => (
+						{homeCopy.primaryCtas.map((cta: LinkCard) => (
 							<a class="card" href={withLang(cta.path)}>
 								<strong>{cta.title}</strong>
 								<p>{cta.description}</p>
@@ -263,40 +231,37 @@ const withLang = (path: string) => withOptionalLangPrefix(path, lang);
 				</section>
 
 				<div class="section">
-					<h2>Start with these 5 guides</h2>
+					<h2>{homeCopy.sections.featured}</h2>
 					<FeaturedEntryPoints />
 				</div>
 
 				<section class="section">
-					<h2>Top concerns</h2>
+					<h2>{homeCopy.sections.topConcerns}</h2>
 					<ul class="list">
 						{topConcerns.map((guide) => (
 							<li>
-								<a href={withLang(guide.path)}>{guide.title}</a>
-								<p>{guide.description}</p>
+								<a href={withLang(`/${stripLangFromId(guide.id)}`)}>{guide.data.title}</a>
+								<p>{guide.data.description}</p>
 							</li>
 						))}
 					</ul>
 				</section>
 
 				<section class="section">
-					<h2>Medical basics for first-time visitors</h2>
-					<p class="section-intro">
-						Use these guides if you want a practical overview of clinics, hospitals, costs, and urgent care
-						before you need them.
-					</p>
+					<h2>{homeCopy.sections.medicalBasics}</h2>
+					<p class="section-intro">{homeCopy.sections.medicalIntro}</p>
 					<div class="card-grid">
 						{medicalBasics.map((guide) => (
-							<a class="card" href={withLang(guide.path)}>
-								<strong>{guide.title}</strong>
-								<p>{guide.description}</p>
+							<a class="card" href={withLang(`/${stripLangFromId(guide.id)}`)}>
+								<strong>{guide.data.title}</strong>
+								<p>{guide.data.description}</p>
 							</a>
 						))}
 					</div>
 				</section>
 
 				<section class="section">
-					<h2>Recently updated</h2>
+					<h2>{homeCopy.sections.recent}</h2>
 					<ul class="list">
 						{recentGuides.map((guide) => {
 							const guidePath = `/${stripLangFromId(guide.id)}`;
@@ -305,7 +270,7 @@ const withLang = (path: string) => withOptionalLangPrefix(path, lang);
 									<a href={withLang(guidePath)}>{guide.data.title}</a>
 									<p>{guide.data.description}</p>
 									<p class="meta">
-										{formatCategory(guide.data.category)} · Last updated
+										{formatCategory(guide.data.category)} · {homeCopy.sections.lastUpdated}
 										<FormattedDate date={guide.data.lastUpdated} />
 									</p>
 								</li>

@@ -4,8 +4,11 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && pagefind --site dist --glob \"{index.html,category/**/*.html,guides/**/*.html,search/**/*.html,zh/**/*.html,ja/**/*.html,ko/**/*.html,id/**/*.html,vi/**/*.html}\"",
+    "build": "astro build && pagefind --site dist --glob \"{index.html,category/**/*.html,guides/**/*.html,search/**/*.html,fr/**/*.html,zh/**/*.html,ja/**/*.html,ko/**/*.html,th/**/*.html,id/**/*.html,vi/**/*.html,ar/**/*.html}\"",
     "preview": "astro preview",
+    "localize:guides": "python3 scripts/localize_guides.py",
+    "localize:cleanup": "python3 scripts/cleanup_localized_guides.py",
+    "localize:check": "python3 scripts/cleanup_localized_guides.py --check",
     "astro": "astro"
   },
   "dependencies": {
@@ -15,6 +18,8 @@
     "sharp": "^0.34.3"
   },
   "devDependencies": {
-    "pagefind": "^1.4.0"
+    "@astrojs/check": "^0.9.8",
+    "pagefind": "^1.4.0",
+    "typescript": "^5.9.3"
   }
 }

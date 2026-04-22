@@ -2,7 +2,10 @@ import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
 const guides = defineCollection({
-	loader: glob({ base: './src/content', pattern: '{en,zh}/guides/**/*.{md,mdx}' }),
+	loader: glob({
+		base: './src/content',
+		pattern: '{en,fr,zh,ja,ko,th,id,vi,ar}/guides/**/*.{md,mdx}',
+	}),
 	schema: z.object({
 		title: z.string(),
 		description: z.string(),
@@ -11,7 +14,7 @@ const guides = defineCollection({
 		lastUpdated: z.coerce.date(),
 		tags: z.array(z.string()).optional(),
 		difficulty: z.enum(['easy', 'medium', 'advanced']).optional(),
-		lang: z.enum(['en', 'zh', 'ko', 'ja', 'id', 'vi']).optional(),
+		lang: z.enum(['en', 'fr', 'zh', 'ja', 'ko', 'th', 'id', 'vi', 'ar']).optional(),
 		translationKey: z.string().optional(),
 	}),
 });

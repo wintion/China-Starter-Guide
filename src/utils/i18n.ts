@@ -1,9 +1,81 @@
-export const SUPPORTED_LANGS = ['en', 'zh', 'ko', 'ja', 'id', 'vi'] as const;
-export type Lang = (typeof SUPPORTED_LANGS)[number];
+export const LANGUAGE_OPTIONS = [
+	{
+		code: 'en',
+		label: 'English',
+		nativeLabel: 'English',
+		ogLocale: 'en_US',
+		isLive: true,
+	},
+	{
+		code: 'fr',
+		label: 'French',
+		nativeLabel: 'Français',
+		ogLocale: 'fr_FR',
+		isLive: true,
+	},
+	{
+		code: 'zh',
+		label: 'Chinese',
+		nativeLabel: '中文',
+		ogLocale: 'zh_CN',
+		isLive: true,
+	},
+	{
+		code: 'ja',
+		label: 'Japanese',
+		nativeLabel: '日本語',
+		ogLocale: 'ja_JP',
+		isLive: true,
+	},
+	{
+		code: 'ko',
+		label: 'Korean',
+		nativeLabel: '한국어',
+		ogLocale: 'ko_KR',
+		isLive: false,
+	},
+	{
+		code: 'th',
+		label: 'Thai',
+		nativeLabel: 'ไทย',
+		ogLocale: 'th_TH',
+		isLive: false,
+	},
+	{
+		code: 'id',
+		label: 'Indonesian',
+		nativeLabel: 'Bahasa Indonesia',
+		ogLocale: 'id_ID',
+		isLive: false,
+	},
+	{
+		code: 'vi',
+		label: 'Vietnamese',
+		nativeLabel: 'Tiếng Việt',
+		ogLocale: 'vi_VN',
+		isLive: false,
+	},
+	{
+		code: 'ar',
+		label: 'Arabic',
+		nativeLabel: 'العربية',
+		ogLocale: 'ar_AR',
+		isLive: false,
+	},
+] as const;
+
+export type Lang = (typeof LANGUAGE_OPTIONS)[number]['code'];
+export const SUPPORTED_LANGS = LANGUAGE_OPTIONS.map((language) => language.code) as readonly Lang[];
+export const LIVE_LANGS = LANGUAGE_OPTIONS.filter((language) => language.isLive).map(
+	(language) => language.code,
+) as readonly Lang[];
 export const DEFAULT_LANG: Lang = 'en';
 
 export const isSupportedLang = (value?: string | null): value is Lang =>
 	Boolean(value) && SUPPORTED_LANGS.includes(value as Lang);
+
+export const getLanguageOption = (lang: string) =>
+	LANGUAGE_OPTIONS.find((language) => language.code === lang) ?? LANGUAGE_OPTIONS[0];
 
 export const getLangFromPath = (pathname: string): Lang => {
 	const first = pathname.split('/').filter(Boolean)[0];
@@ -52,7 +124,7 @@ export const withOptionalLangPrefix = (
 export const buildAlternates = (
 	pathname: string,
 	site: URL,
-	langs: readonly Lang[] = SUPPORTED_LANGS,
+	langs: readonly Lang[] = LIVE_LANGS,
 	defaultLang: Lang = DEFAULT_LANG,
 ) => {
 	const basePath = stripLangFromPath(pathname) || '/';

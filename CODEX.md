@@ -6,7 +6,8 @@
 4. Do NOT add dependencies unless strictly required; explain why if added.
 5. Do NOT reformat unrelated files.
 6. The entire site defaults to English. New pages, UI copy, content, and labels should be written in English unless a task explicitly requires another language.
-7. After changes, ensure:
+7. For non-English content work, follow `LOCALIZATION.md` and prefer natural target-language writing over literal translation.
+8. After changes, ensure:
    - `npm run dev` starts
    - `npm run build` succeeds
-8. At the end, list files changed and what you did.
+9. At the end, list files changed and what you did.

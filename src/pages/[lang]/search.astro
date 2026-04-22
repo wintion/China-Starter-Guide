@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Layout from '../../components/Layout.astro';
 import { buildAlternates, DEFAULT_LANG, getLangFromId, normalizeLangParam } from '../../utils/i18n';
+import { getSearchCopy } from '../../utils/localized-copy';
 
 const isProd = import.meta.env.PROD;
 export async function getStaticPaths() {
@@ -18,14 +19,16 @@ if (lang === DEFAULT_LANG) {
 const allGuides = await getCollection('guides');
 const availableLangs = Array.from(new Set(allGuides.map((guide) => getLangFromId(guide.id))));
 const alternates = buildAlternates(Astro.url.pathname, Astro.site ?? Astro.url, availableLangs);
+const searchCopy = getSearchCopy(lang);
+const dir = lang === 'ar' ? 'rtl' : 'ltr';
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={lang} dir={dir}>
 	<head>
 		<BaseHead
-			title="Search | China Starter Guide"
-			description="Search guides and answers for first-time visitors to China."
+			title={searchCopy.metaTitle}
+			description={searchCopy.metaDescription}
 			lang={lang}
 			alternates={alternates}
 		/>
@@ -96,22 +99,22 @@ const alternates = buildAlternates(Astro.url.pathname, Astro.site ?? Astro.url, 
 		<Layout>
 			<main>
 				<section class="search-shell">
-					<h1>Search</h1>
-					<p>Find guides and answers across the China Starter Guide.</p>
-					<label class="sr-only" for="search-input">Search guides</label>
+					<h1>{searchCopy.title}</h1>
+					<p>{searchCopy.intro}</p>
+					<label class="sr-only" for="search-input">{searchCopy.label}</label>
 					<input
 						id="search-input"
 						class="search-input"
 						type="search"
-						placeholder="Search guides"
+						placeholder={searchCopy.placeholder}
 						autocomplete="off"
 					/>
-					<p id="search-status" class="search-status">Start typing to see results.</p>
+					<p id="search-status" class="search-status">{searchCopy.startTyping}</p>
 					<ul id="search-results" class="search-results"></ul>
 				</section>
 			</main>
 		</Layout>
-		<script define:vars={{ isProd }}>
+		<script define:vars={{ isProd, searchCopy }}>
 			const input = document.querySelector('#search-input');
 			const results = document.querySelector('#search-results');
 			const status = document.querySelector('#search-status');
@@ -137,7 +140,7 @@ const alternates = buildAlternates(Astro.url.pathname, Astro.site ?? Astro.url, 
 			const renderResults = (items) => {
 				if (!items.length) {
 					results.innerHTML = '';
-					renderStatus('No results found. Try another search.');
+					renderStatus(searchCopy.noResults);
 					return;
 				}
 
@@ -153,24 +156,24 @@ const alternates = buildAlternates(Astro.url.pathname, Astro.site ?? Astro.url, 
 						`;
 					})
 					.join('');
-					renderStatus(`${items.length} result${items.length === 1 ? '' : 's'}`);
+				renderStatus(searchCopy.resultsLabel.replace('{count}', String(items.length)));
 			};
 
 			const initializeSearch = async () => {
 				if (!isProd) {
 					input.disabled = true;
-					renderStatus('Search is available after `npm run build` and `npm run preview`.');
+					renderStatus(searchCopy.availableAfterBuild);
 					return;
 				}
 				input.disabled = true;
-				renderStatus('Loading search index...');
+				renderStatus(searchCopy.loadingIndex);
 				try {
 					await loadPagefind();
 					input.disabled = false;
-					renderStatus('Start typing to see results.');
+					renderStatus(searchCopy.startTyping);
 				} catch (error) {
 					input.disabled = true;
-					renderStatus('Search is temporarily unavailable.');
+					renderStatus(searchCopy.temporarilyUnavailable);
 				}
 			};
 
@@ -186,13 +189,13 @@ const alternates = buildAlternates(Astro.url.pathname, Astro.site ?? Astro.url, 
 
 				if (!query) {
 					results.innerHTML = '';
-					renderStatus('Start typing to see results.');
+					renderStatus(searchCopy.startTyping);
 					return;
 				}
 
 				try {
 					const pagefind = await loadPagefind();
-					renderStatus('Searching...');
+					renderStatus(searchCopy.searching);
 					const search = await runSearch(pagefind, query);
 					if (!search) {
 						return;
@@ -201,7 +204,7 @@ const alternates = buildAlternates(Astro.url.pathname, Astro.site ?? Astro.url, 
 					renderResults(data);
 				} catch (error) {
 					results.innerHTML = '';
-					renderStatus('Search is still loading. Try again in a moment.');
+					renderStatus(searchCopy.stillLoading);
 				}
 			});
 

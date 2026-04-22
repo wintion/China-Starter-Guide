@@ -1,10 +1,28 @@
 ---
+import { getCollection } from 'astro:content';
 import { featuredGuides } from '../content/featured-guides';
-import { getLangFromPath, withOptionalLangPrefix } from '../utils/i18n';
+import { getLangFromId, getLangFromPath, stripLangFromId, withOptionalLangPrefix } from '../utils/i18n';
+import { getFeaturedEntryPointsCopy } from '../utils/localized-copy';
 
-const guides = [...featuredGuides].sort((a, b) => a.priority - b.priority);
 const lang = getLangFromPath(Astro.url.pathname);
 const withLang = (path: string) => withOptionalLangPrefix(path, lang);
+const featuredCopy = getFeaturedEntryPointsCopy(lang);
+const allGuides = await getCollection('guides');
+const localizedGuideMap = new Map(
+	allGuides
+		.filter((guide) => getLangFromId(guide.id) === lang)
+		.map((guide) => [stripLangFromId(guide.id), guide]),
+);
+const guides = [...featuredGuides]
+	.sort((a, b) => a.priority - b.priority)
+	.map((guide) => {
+		const localizedEntry = localizedGuideMap.get(guide.href.replace(/^\//, ''));
+		return {
+			...guide,
+			title: localizedEntry?.data.title ?? guide.title,
+			description: localizedEntry?.data.description ?? guide.description,
+		};
+	});
 
 const iconMap: Record<string, { viewBox: string; paths: string[] }> = {
 	start: {
@@ -32,7 +50,7 @@ const iconMap: Record<string, { viewBox: string; paths: string[] }> = {
 const getIcon = (iconKey: string) => iconMap[iconKey] ?? iconMap.start;
 ---
 
-<section class="featured" aria-label="Featured guides">
+<section class="featured" aria-label={featuredCopy.ariaLabel}>
 	<ul class="grid">
 		{guides.map((guide) => {
 			const icon = getIcon(guide.iconKey);
@@ -48,8 +66,12 @@ const getIcon = (iconKey: string) => iconMap[iconKey] ?? iconMap.start;
 					<div class="content">
 						<h3>{guide.title}</h3>
 						<p>{guide.description}</p>
-						<a class="read-link" href={withLang(guide.href)} aria-label={`Read guide: ${guide.title}`}>
-							Read guide
+						<a
+							class="read-link"
+							href={withLang(guide.href)}
+							aria-label={`${featuredCopy.readGuideLabel} ${guide.title}`}
+						>
+							{featuredCopy.readGuide}
 						</a>
 					</div>
 				</li>

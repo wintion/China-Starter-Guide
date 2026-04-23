@@ -39,7 +39,7 @@ export const LANGUAGE_OPTIONS = [
 		label: 'Thai',
 		nativeLabel: 'ไทย',
 		ogLocale: 'th_TH',
-		isLive: false,
+		isLive: true,
 	},
 	{
 		code: 'id',

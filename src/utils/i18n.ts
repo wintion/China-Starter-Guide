@@ -32,7 +32,7 @@ export const LANGUAGE_OPTIONS = [
 		label: 'Korean',
 		nativeLabel: '한국어',
 		ogLocale: 'ko_KR',
-		isLive: false,
+		isLive: true,
 	},
 	{
 		code: 'th',

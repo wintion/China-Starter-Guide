@@ -53,7 +53,7 @@ export const LANGUAGE_OPTIONS = [
 		label: 'Vietnamese',
 		nativeLabel: 'Tiếng Việt',
 		ogLocale: 'vi_VN',
-		isLive: false,
+		isLive: true,
 	},
 	{
 		code: 'ar',

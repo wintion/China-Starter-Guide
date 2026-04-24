@@ -46,7 +46,7 @@ export const LANGUAGE_OPTIONS = [
 		label: 'Indonesian',
 		nativeLabel: 'Bahasa Indonesia',
 		ogLocale: 'id_ID',
-		isLive: false,
+		isLive: true,
 	},
 	{
 		code: 'vi',

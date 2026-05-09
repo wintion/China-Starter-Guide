@@ -337,7 +337,7 @@ const isActive = (href: string) => {
 	.lang-menu-popover {
 		position: absolute;
 		top: calc(100% + 0.18rem);
-		right: 0;
+		inset-inline-end: 0;
 		width: 184px;
 		max-width: calc(100vw - 0.75rem);
 		padding: 0.18rem 0;
@@ -376,14 +376,15 @@ const isActive = (href: string) => {
 		position: relative;
 		width: 100%;
 		display: block;
-		padding: 0.38rem 1.05rem 0.38rem 0.52rem;
+		padding-block: 0.38rem;
+		padding-inline: 0.52rem 1.05rem;
 		border: 0;
 		border-radius: 0;
 		box-sizing: border-box;
 		background: transparent;
 		color: rgb(var(--black));
 		text-decoration: none;
-		text-align: left;
+		text-align: start;
 		font: inherit;
 		line-height: 1;
 		transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
@@ -409,7 +410,7 @@ const isActive = (href: string) => {
 		content: '✓';
 		position: absolute;
 		top: 50%;
-		right: 0.46rem;
+		inset-inline-end: 0.46rem;
 		transform: translateY(-50%);
 		color: var(--accent-dark);
 		font-size: 0.76rem;
@@ -551,12 +552,27 @@ const isActive = (href: string) => {
 			height: auto;
 		}
 		.lang-menu-popover {
-			right: 0;
+			inset-inline-end: 0;
 		}
+	}
+	:global(html[dir="rtl"]) .site-nav {
+		justify-content: flex-start;
+	}
+	:global(html[dir="rtl"]) .site-nav a,
+	:global(html[dir="rtl"]) .footer-links {
+		flex-direction: row-reverse;
+	}
+	:global(html[dir="rtl"]) .footer-inner {
+		flex-direction: row-reverse;
 	}
 	@media (max-width: 560px) {
 		.lang-menu-popover {
 			width: min(184px, calc(100vw - 0.75rem));
+		}
+	}
+	@media (max-width: 900px) {
+		:global(html[dir="rtl"]) .site-nav {
+			justify-content: flex-start;
 		}
 	}
 </style>

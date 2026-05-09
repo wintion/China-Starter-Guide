@@ -60,7 +60,7 @@ export const LANGUAGE_OPTIONS = [
 		label: 'Arabic',
 		nativeLabel: 'العربية',
 		ogLocale: 'ar_AR',
-		isLive: false,
+		isLive: true,
 	},
 ] as const;
 

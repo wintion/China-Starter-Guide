@@ -40,7 +40,7 @@ body {
 	font-family: "Atkinson", sans-serif;
 	margin: 0;
 	padding: 0;
-	text-align: left;
+	text-align: start;
 	position: relative;
 	isolation: isolate;
 	background-color: var(--paper);
@@ -176,9 +176,10 @@ pre > code {
 	all: unset;
 }
 blockquote {
-	border-left: 4px solid var(--accent);
+	border-inline-start: 4px solid var(--accent);
 	background: var(--surface);
-	padding: 0.75rem 1rem 0.75rem 1.25rem;
+	padding-block: 0.75rem;
+	padding-inline: 1.25rem 1rem;
 	margin: 0;
 	font-size: 1.333em;
 	border-radius: 12px;

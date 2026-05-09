@@ -521,14 +521,15 @@ const dir = lang === 'ar' ? 'rtl' : 'ltr';
 			}
 			.topic-card li a {
 				display: block;
-				padding: 0.7rem 0.8rem 0.7rem 1.6rem;
+				padding-block: 0.7rem;
+				padding-inline: 1.6rem 0.8rem;
 				border-radius: 14px;
 				position: relative;
 			}
 			.topic-card li a::before {
 				content: "";
 				position: absolute;
-				left: 0.8rem;
+				inset-inline-start: 0.8rem;
 				top: 1.1rem;
 				width: 6px;
 				height: 6px;
@@ -623,6 +624,27 @@ const dir = lang === 'ar' ? 'rtl' : 'ltr';
 				.topic-grid {
 					grid-template-columns: 1fr;
 				}
+			}
+			:global(html[dir="rtl"]) .category-header::after {
+				background-position: left 12px center;
+			}
+			:global(html[dir="rtl"]) .featured-card[data-category="medical"] {
+				background:
+					linear-gradient(180deg, rgba(245, 251, 247, 0.96), rgba(255, 249, 241, 0.98)),
+					radial-gradient(circle at top left, rgba(47, 111, 85, 0.12), transparent 48%);
+			}
+			:global(html[dir="rtl"]) .featured-card-action,
+			:global(html[dir="rtl"]) .quick-path-action {
+				flex-direction: row-reverse;
+			}
+			:global(html[dir="rtl"]) .featured-card-action::after,
+			:global(html[dir="rtl"]) .quick-path-action::after {
+				content: "<-";
+			}
+			:global(html[dir="rtl"]) .quick-path-card {
+				background:
+					linear-gradient(180deg, rgba(243, 250, 246, 0.96), rgba(255, 250, 243, 0.98)),
+					radial-gradient(circle at top left, rgba(47, 111, 85, 0.12), transparent 45%);
 			}
 		</style>
 	</head>
